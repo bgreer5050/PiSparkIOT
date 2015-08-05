@@ -12,6 +12,12 @@ namespace Blinky
     public class TimeManager
     {
 
+        private long tickOffset; // Keeps track of how many ticks the Spark is off from the actual time.
+        private bool timeIsUpdated;
+
+
+
+
         public TimeManager()
         {
 
@@ -21,18 +27,33 @@ namespace Blinky
             //string server = "10.0.200.5";
 
             var timeZoneOffset = -6;
-
             var currentTime = GetNtpTime(server, timeZoneOffset);
-            Debug.(currentTime.ToLocalTime().ToString());
-
-            Microsoft.SPOT.Hardware.Utility.SetLocalTime(currentTime.ToLocalTime());
+            Debug.WriteLine(currentTime.ToLocalTime().ToString());
 
             TimeSpan ts = DateTime.Now - time1;
             tickOffset = ts.Ticks;
             TimeUpdated = true;
-            Debug.Print(DateTime.Now.ToLocalTime().ToString());
-            Debug.Print(DateTime.Now.ToUniversalTime().ToString());
+            Debug.WriteLine(DateTime.Now.ToLocalTime().ToString());
+            Debug.WriteLine(DateTime.Now.ToUniversalTime().ToString());
         }
+
+
+
+        public bool TimeUpdated
+        {
+            get { return timeIsUpdated; }
+            set { timeIsUpdated = value; }
+        }
+
+        public long TickOffset
+        {
+            get { return tickOffset; }
+            set { tickOffset = value; }
+        }
+
+
+
+
 
         static TimeSpan _offset = new TimeSpan(0, 0, 0);
         public static TimeSpan CurrentOffset //Doesn't have to be public, it is for me because I'm presenting it on the UI for my information
