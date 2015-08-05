@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -27,7 +28,6 @@ namespace Blinky
         {
             InitializeComponent();
 
-            TimeManager timerManager = new TimeManager();
             
 
 
@@ -39,17 +39,21 @@ namespace Blinky
             timerDateTime.Interval = TimeSpan.FromMilliseconds(500);
             timerDateTime.Tick += TimerDateTime_Tick;
 
-
-
-
-
             InitGPIO();
             if (pin != null)
             {
                 timer.Start();
             }
-            txtblockTime.Text = DateTime.Today.TimeOfDay.ToString();
+            
+            txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
+
+            
+           
         }
+
+
+
+       
 
         private void TimerDateTime_Tick(object sender, object e)
         {
@@ -79,11 +83,6 @@ namespace Blinky
 
         }
 
-   
-
-
-
-
         private void Timer_Tick(object sender, object e)
         {
             if (pinValue == GpioPinValue.High)
@@ -101,7 +100,23 @@ namespace Blinky
                 greenLED.Fill = greenBrush;
             }
         }
-             
 
+
+        async Task<int> AccessTheWebAsync()
+        {
+            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+
+            Task<string> getStringTask = client.GetStringAsync(@"http://time.nist.gov");
+            string urlContents = await getStringTask;
+
+            return urlContents.Length;
+
+        }
+
+        private async void  btnTest_Click(object sender, RoutedEventArgs e)
+        {
+           int result = await AccessTheWebAsync();
+            txtBlockURLLength.Text = result.ToString();
+        }
     }
 }
