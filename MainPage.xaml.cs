@@ -14,22 +14,48 @@ namespace Blinky
         private const int LED_PIN = 5;
         private GpioPin pin;
         private GpioPinValue pinValue;
+
         private DispatcherTimer timer;
+        private DispatcherTimer timerDateTime;
+
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+        private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+        private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
 
         public MainPage()
         {
             InitializeComponent();
 
+            TimeManager timerManager = new TimeManager();
+            
+
+
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
+
+            timerDateTime = new DispatcherTimer();
+            timerDateTime.Interval = TimeSpan.FromMilliseconds(500);
+            timerDateTime.Tick += TimerDateTime_Tick;
+
+
+
+
+
             InitGPIO();
             if (pin != null)
             {
                 timer.Start();
-            }        
+            }
+            txtblockTime.Text = DateTime.Today.TimeOfDay.ToString();
+        }
+
+        private void TimerDateTime_Tick(object sender, object e)
+        {
+            txtblockTime.Text = DateTime.Today.Date.ToString();
+            
+            
         }
 
         private void InitGPIO()
@@ -64,13 +90,15 @@ namespace Blinky
             {
                 pinValue = GpioPinValue.Low;
                 pin.Write(pinValue);
-                LED.Fill = redBrush;
+                redLED.Fill = redBrush;
+                greenLED.Fill = grayBrush;
             }
             else
             {
                 pinValue = GpioPinValue.High;
                 pin.Write(pinValue);
-                LED.Fill = grayBrush;
+                redLED.Fill = grayBrush;
+                greenLED.Fill = greenBrush;
             }
         }
              
