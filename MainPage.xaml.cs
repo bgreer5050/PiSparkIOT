@@ -7,7 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 
-namespace Blinky
+namespace SparkPi
 {
     public sealed partial class MainPage : Page
     {
@@ -27,6 +27,9 @@ namespace Blinky
         {
             InitializeComponent();
 
+
+
+
             TimeManager timerManager = new TimeManager();
             
 
@@ -40,7 +43,7 @@ namespace Blinky
             timerDateTime.Tick += TimerDateTime_Tick;
 
 
-
+            SetUpController();
 
 
             InitGPIO();
