@@ -7,8 +7,8 @@
     <ProjectGuid>{3662C7F2-04F8-4046-BF8E-EF1AC302DFE2}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Blinky</RootNamespace>
-    <AssemblyName>Blinky</AssemblyName>
+    <RootNamespace>SparkPi</RootNamespace>
+    <AssemblyName>SparkPi</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.10240.0</TargetPlatformVersion>
