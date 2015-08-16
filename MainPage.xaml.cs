@@ -28,7 +28,9 @@ namespace SparkPi
         public MainPage()
         {
             InitializeComponent();
-            
+            DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            txtblockTime.Text = dt.TimeOfDay.ToString();
+
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
@@ -46,8 +48,7 @@ namespace SparkPi
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
             txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
           
-            DateTime dt =  TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-            txtblockTime.Text = dt.TimeOfDay.ToString();
+           
             
         }
 
