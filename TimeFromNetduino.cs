@@ -1,22 +1,70 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.SPOT;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Text;
-using System.Threading.Tasks;
 
-namespace SparkPi
+namespace ApolloSpark
 {
-    public static class PiTime
+    public class Time
     {
+        private long tickOffset; // Keeps track of how many ticks the Spark is off from the actual time.
+        private bool timeIsUpdated;
+        private Network network;
+        private bool blnFailNotificationSent;
+
+
+        public Time()
+        {
+            blnFailNotificationSent = false;
+            this.network = Program.network;
+            this.timeIsUpdated = false;
+            this.thread = new Thread(MonitorTime);
+            thread.Start();
+        }
+
+        private void MonitorTime()
+        {
+
+            while (this.TimeUpdated == false)
+            {
+                try
+                {
+                    //if (network.NetworkUp == true)
+                    //{
+                    UpdateNetduinoDateTime();
+                    //}
+                }
+                catch (Exception ex)
+                {
+                    Debug.Print("FAILED Time Update - L48");
+                    Debug.Print(ex.Message);
+                    Thread.Sleep(30000);
+
+                }
+
+            }
+        }
+
+        public bool TimeUpdated
+        {
+            get { return timeIsUpdated; }
+            set { timeIsUpdated = value; }
+        }
+
+        public long TickOffset
+        {
+            get { return tickOffset; }
+            set { tickOffset = value; }
+        }
+
 
         public void UpdateNetduinoDateTime()
         {
             try
             {
-                Windows.System.SystemManagementContract db = new Windows.System.SystemManagementContract();
-                DateTime.
+
 
                 DateTime time1 = DateTime.Now;
 
@@ -44,7 +92,7 @@ namespace SparkPi
             //Debug.GC(true);
         }
 
-
+        //-----------------------------------------------------------------------------------------------------
         private DateTime GetNtpTime(String TimeServer, int UTC_Offset)
         {
             EndPoint ep = new IPEndPoint(Dns.GetHostEntry(TimeServer).AddressList[0], 13);
@@ -70,8 +118,21 @@ namespace SparkPi
             return LocalDateTime;
         }
 
+        private Thread thread;
 
-      
+        public Thread Thread
+        {
+            get
+            {
+                return thread;
+            }
+            set
+            {
+                thread = value;
+            }
+        }
 
     }
 }
+
+

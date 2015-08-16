@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Windows.Networking.Connectivity;
 
-namespace Blinky
+namespace SparkPi
 {
     //public class Network
     //{

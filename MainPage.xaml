@@ -21,10 +21,10 @@
 
 
 <Page
-    x:Class="Blinky.MainPage"
+    x:Class="SparkPi.MainPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:Blinky"
+    xmlns:local="using:SparkPi"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
@@ -39,8 +39,13 @@
             <TextBlock x:Name="GpioStatus" Text="Waiting to initialize GPIO..." Margin="10,50,10,10" TextAlignment="Center" FontSize="26.667" />
             <TextBlock x:Name="txtblockTime" FontSize="25.667" />
             <TextBlock x:Name="txtBlockURLLength" FontSize="25.667" />
-            <Button x:Name="btnTest" Click="btnTest_Click">Button</Button>
-
+            
+            <Button x:Name="btnTest" Click="btnTest_Click">Restart</Button>
+            <Button x:Name="btnSetMachineStatusRUN" Click="btnSetMachineStatusRUN_Click">Running</Button>
+            <Button x:Name="btnSetMachineStatusDOWN" Click="btnSetMachineStatusDOWN_Click">Down</Button>
+            <Button x:Name="btnCycleSimulate" Click="btnCycleSimulate_Click">Cycle</Button>
+            
+            <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>
         </StackPanel>
     </Grid>
 </Page>

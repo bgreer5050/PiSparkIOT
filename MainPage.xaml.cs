@@ -8,11 +8,12 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 
-namespace Blinky
+namespace SparkPi
 {
     public sealed partial class MainPage : Page
     {
         private const int LED_PIN = 5;
+      
         private GpioPin pin;
         private GpioPinValue pinValue;
 
@@ -27,10 +28,7 @@ namespace Blinky
         public MainPage()
         {
             InitializeComponent();
-
             
-
-
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
             timer.Tick += Timer_Tick;
@@ -45,10 +43,12 @@ namespace Blinky
                 timer.Start();
             }
             
-            txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
-
+            //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
+            txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
+          
+            DateTime dt =  TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
+            txtblockTime.Text = dt.TimeOfDay.ToString();
             
-           
         }
 
 
@@ -58,8 +58,6 @@ namespace Blinky
         private void TimerDateTime_Tick(object sender, object e)
         {
             txtblockTime.Text = DateTime.Today.Date.ToString();
-            
-            
         }
 
         private void InitGPIO()
@@ -78,6 +76,7 @@ namespace Blinky
             pinValue = GpioPinValue.High;
             pin.Write(pinValue);
             pin.SetDriveMode(GpioPinDriveMode.Output);
+
 
             GpioStatus.Text = "GPIO pin initialized correctly.";
 
@@ -106,7 +105,7 @@ namespace Blinky
         {
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
-            Task<string> getStringTask = client.GetStringAsync(@"http://time.nist.gov");
+            Task<string> getStringTask = client.GetStringAsync(@"http://yahoo.com");
             string urlContents = await getStringTask;
 
             return urlContents.Length;
@@ -117,6 +116,16 @@ namespace Blinky
         {
            int result = await AccessTheWebAsync();
             txtBlockURLLength.Text = result.ToString();
+        }
+
+        private void btnSetMachineStatusRUN_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnSetMachineStatusDOWN_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
