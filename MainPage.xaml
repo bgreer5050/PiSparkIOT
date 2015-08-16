@@ -31,10 +31,12 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            <Ellipse x:Name="redLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
-            <Ellipse x:Name="yellowLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
-            <Ellipse x:Name="greenLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
-            
+            <StackPanel Orientation="Horizontal">
+                <Ellipse x:Name="redLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
+                <Ellipse x:Name="yellowLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
+                <Ellipse x:Name="greenLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
+            </StackPanel>
+
             <TextBlock x:Name="DelayText" Text="500ms" Margin="10" TextAlignment="Center" FontSize="26.667" />
             <TextBlock x:Name="GpioStatus" Text="Waiting to initialize GPIO..." Margin="10,50,10,10" TextAlignment="Center" FontSize="26.667" />
             <TextBlock x:Name="txtblockTime" FontSize="25.667" />
@@ -43,7 +45,7 @@
             <Button x:Name="btnTest" Click="btnTest_Click">Restart</Button>
             <Button x:Name="btnSetMachineStatusRUN" Click="btnSetMachineStatusRUN_Click">Running</Button>
             <Button x:Name="btnSetMachineStatusDOWN" Click="btnSetMachineStatusDOWN_Click">Down</Button>
-            <Button x:Name="btnCycleSimulate" Click="btnCycleSimulate_Click">Cycle</Button>
+            <!--<Button x:Name="btnCycleSimulate" Click="btnCycleSimulate_Click">Cycle</Button>-->
             
             <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>
         </StackPanel>
