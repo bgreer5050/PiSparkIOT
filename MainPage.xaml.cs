@@ -12,6 +12,7 @@ namespace SparkPi
 {
     public sealed partial class MainPage : Page
     {
+
         private const int LED_PIN = 5;
       
         private GpioPin pin;
@@ -25,9 +26,13 @@ namespace SparkPi
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
 
+        System.Threading.SynchronizationContext _uiSyncContext;
+
+
         public MainPage()
         {
             InitializeComponent();
+            _uiSyncContext = System.Threading.SynchronizationContext.Current;
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             txtblockTime.Text = dt.TimeOfDay.ToString();
 
