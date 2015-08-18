@@ -15,7 +15,7 @@ namespace SparkPiMockUI.Utilities
 
         public static async void Send(string strBody)
         {
-
+            Debug.Print(System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
             try
             {
                 string strEmailMessage = "to=bgreer@metal-matic.com&from=apollo@metal-matic.com&subject=Spark Issue&body=" + strBody;
