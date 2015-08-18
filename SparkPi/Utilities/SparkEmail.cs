@@ -23,8 +23,8 @@ namespace SparkPi.Utilities
 
             var content = new FormUrlEncodedContent(pairs);
 
-            var client = new HttpClient { BaseAddress = new Uri("http://10.0.0.1") };
-            //  var response = client.PostAsync("/Messaging/SendEmail", content).Result;
+            var client = new HttpClient { BaseAddress = new Uri("http://10.0.0.16") };
+            var response = client.PostAsync("/Messaging/SendEmail", content).Result;
             Task<HttpResponseMessage> getStringTask = client.PostAsync("/Messaging/SendEmail", content);
             HttpResponseMessage message = await client.PostAsync("/Messaging/SendEmail", content);
             

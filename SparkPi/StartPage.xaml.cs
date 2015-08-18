@@ -21,7 +21,7 @@ namespace SparkPi
 
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
-
+        int intShowDateTimeFlag = 1;
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
@@ -43,9 +43,10 @@ namespace SparkPi
             timer.Tick += Timer_Tick;
 
             timerDateTime = new DispatcherTimer();
-            timerDateTime.Interval = TimeSpan.FromMilliseconds(500);
-            timerDateTime.Tick += TimerDateTime_Tick;
-
+            timerDateTime.Interval = TimeSpan.FromMilliseconds(3500);
+            //timerDateTime.Tick += TimerDateTime_Tick;
+            timerDateTime.Tick += TimerDateTime_Tick1;
+            timerDateTime.Start();
             InitGPIO();
             if (pin != null)
             {
@@ -55,6 +56,29 @@ namespace SparkPi
             
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
             txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
+
+            Utilities.SparkEmail.Send("TEST FROM PI");
+        }
+
+        private void TimerDateTime_Tick1(object sender, object e)
+        {
+            if (intShowDateTimeFlag == 1)
+            {
+                txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
+                intShowDateTimeFlag = 2;
+            }
+           
+            else if (intShowDateTimeFlag == 2)
+            {
+                txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
+                intShowDateTimeFlag = 3;
+            }
+
+            else if (intShowDateTimeFlag == 3)
+            {
+                txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
+                intShowDateTimeFlag = 1;
+            }
             
         }
 
@@ -68,9 +92,26 @@ namespace SparkPi
 
 
 
-        private void TimerDateTime_Tick(object sender, object e)
+        private void TimerDateTime_Tick(object sender, EventArgs e)
         {
-            txtblockTime.Text = DateTime.Today.Date.ToString();
+            if (intShowDateTimeFlag == 1)
+            {
+                txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
+                intShowDateTimeFlag = 2;
+            }
+           
+            else if (intShowDateTimeFlag == 2)
+            {
+                txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
+                intShowDateTimeFlag = 3;
+            }
+
+            else if (intShowDateTimeFlag == 3)
+            {
+                txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
+                intShowDateTimeFlag = 1;
+            }
+           
         }
 
         private void InitGPIO()

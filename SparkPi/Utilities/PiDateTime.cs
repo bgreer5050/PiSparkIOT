@@ -9,14 +9,15 @@ namespace SparkPi.Utilities
     public class PiDateTime
     {
         private DateTime _dateTime;
+        private DateTime _universalDateTime;
+        private DateTime _localTime;
 
         public DateTime DateTime
         {
-            get { return _dateTime; }
+            get { return DateTime.Now; }
             set { _dateTime = value; }
         }
 
-        private DateTime _universalDateTime;
 
         public DateTime UniversalDateTime
         {
@@ -26,7 +27,6 @@ namespace SparkPi.Utilities
             set { _universalDateTime = value; }
         }
 
-        private DateTime _localTime;
 
         public DateTime MyProperty
         {
