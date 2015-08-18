@@ -10,7 +10,7 @@ using Windows.UI.Xaml.Media;
 
 namespace SparkPi
 {
-    public sealed partial class MainPage : Page
+    public sealed partial class StartPage : Page
     {
 
         private const int LED_PIN = 5;
@@ -29,7 +29,7 @@ namespace SparkPi
         System.Threading.SynchronizationContext _uiSyncContext;
 
 
-        public MainPage()
+        public StartPage()
         {
             InitializeComponent();
             _uiSyncContext = System.Threading.SynchronizationContext.Current;

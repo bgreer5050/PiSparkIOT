@@ -13,6 +13,13 @@ namespace SparkPi
         private string modelNumber;
         private string revision;
 
+        public Controller()
+        {
+            this.modelNumber = "Pi 2";
+
+        }
+
+
         public string IPAddress
         {
             get { return ipAddress; }
@@ -43,6 +50,16 @@ namespace SparkPi
         private int _cycleLengthMs;
         private int _heartbeatsRequiredToChangeState;
         private string _enabled;
+
+
+        public Configuration()
+        {
+            this.AssetNumber = "9999";
+            this._gracePeriodMultiple = 2.0f;
+            this.CycleLengthMs = 10000;
+            this.HeartbeatsRequiredToChangeState = 2;
+
+        }
 
         public string AssetNumber
         {
