@@ -42,8 +42,6 @@ namespace SparkPiMockUI
             InitializeComponent();
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
 
-            Network network = new Network();
-            Debug.Print(network.MacAddress);
 
             timer = new DispatcherTimer();
             timer.Interval = TimeSpan.FromMilliseconds(500);
@@ -62,6 +60,11 @@ namespace SparkPiMockUI
             //}
 
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
+
+
+            Controller controller = new Controller();
+            Configuration configuration = new Configuration();
+            Network network = new Network();
 
             setUpSystem();
 

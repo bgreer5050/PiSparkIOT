@@ -51,5 +51,17 @@ namespace SparkPiMockUI
                 _macAddress = value;
             }
         }
+
+        public bool NetworkUp
+        {
+            get
+            {
+                return NetworkInterface.GetIsNetworkAvailable();
+            }
+            set
+            {
+                _networkUp = value;
+            }
+        }
     }
 }

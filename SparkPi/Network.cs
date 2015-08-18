@@ -27,13 +27,25 @@ namespace SparkPi
             }
         }
 
+        public bool NetworkUp
+        {
+            get
+            {
+                return NetworkInterface.GetIsNetworkAvailable();
+            }
+            set
+            {
+                _networkUp = value;
+            }
+        }
+
         //public string MacAddress
         //{
         //    get
         //    {
         //        if (this._macAddress == null || this._macAddress == "")
         //        {
-                    
+
         //            NetworkAdapter nics = NetworkInterface.GetAllNetworkInterfaces();
         //            if (nics == null || nics.Length < 1)
         //            {
