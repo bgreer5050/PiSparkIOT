@@ -12,6 +12,7 @@ namespace SparkPi
 {
     public sealed partial class StartPage : Page
     {
+        public static DateTime timeOfSystemStartup;
 
         private const int LED_PIN = 5;
       
@@ -25,6 +26,7 @@ namespace SparkPi
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
+		Utilities.PiDateTime piDateTime = new Utilities.PiDateTime();
 
         System.Threading.SynchronizationContext _uiSyncContext;
 
@@ -48,18 +50,23 @@ namespace SparkPi
             if (pin != null)
             {
                 timer.Start();
+			setUpSystem();
             }
             
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
             txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
-          
-           
             
         }
 
+        private void setUpSystem()
+        {
+            //timeOfSystemStartup = DateTime.UtcNow;
+            //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
+            txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
+
+        }
 
 
-       
 
         private void TimerDateTime_Tick(object sender, object e)
         {

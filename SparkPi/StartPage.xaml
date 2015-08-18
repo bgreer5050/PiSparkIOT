@@ -41,7 +41,12 @@
             <TextBlock x:Name="GpioStatus" Text="Waiting to initialize GPIO..." Margin="10,50,10,10" TextAlignment="Center" FontSize="26.667" />
             <TextBlock x:Name="txtblockTime" FontSize="25.667" />
             <TextBlock x:Name="txtBlockURLLength" FontSize="25.667" />
-            
+
+            <StackPanel Orientation="Horizontal" >
+                <TextBlock VerticalAlignment="Center">System Start Time:</TextBlock>
+                <TextBlock x:Name="txtSystemStartTime" VerticalAlignment="Center" TextWrapping="Wrap" Text="TextBlock"/>
+            </StackPanel>
+
             <Button x:Name="btnTest" Click="btnTest_Click">Restart</Button>
             <Button x:Name="btnSetMachineStatusRUN" Click="btnSetMachineStatusRUN_Click">Running</Button>
             <Button x:Name="btnSetMachineStatusDOWN" Click="btnSetMachineStatusDOWN_Click">Down</Button>
