@@ -15,26 +15,22 @@ namespace SparkPi
             
 
             StorageFolder externalDevices = Windows.Storage.KnownFolders.RemovableDevices;
-            // StorageFolder folder = await externalDevices.CreateFolderAsync("TestX");
-            try
-            {
-                StorageFolder sdCard = (await externalDevices.GetFoldersAsync()).FirstOrDefault();
-            }
-            catch(System.UnauthorizedAccessException ex)
-            {
-                Debug.Write(ex.Message);
-                Debug.Write("Pause");
-                throw;
-            }
-            //if (sdCard != null)
-            //{
-            //    Debug.WriteLine("SD CARD AVAILABLE");
-            //}
-            //else
-            //{
-            //    Debug.WriteLine("NO SD CARD AVAILABLE");
+             //StorageFolder folder = await externalDevices.CreateFolderAsync("TestX");
+           
 
-            //}
+                StorageFolder sdCard = (await externalDevices.GetFoldersAsync()).FirstOrDefault();
+
+            if (sdCard != null)
+            {
+                Debug.WriteLine("SD CARD AVAILABLE");
+            }
+            else
+            {
+                Debug.WriteLine("NO SD CARD AVAILABLE");
+
+            }
+
+            Debug.WriteLine("Pause");
         }
     }
 }
