@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI.Xaml;
@@ -34,6 +35,10 @@ namespace SparkPi
         public StartPage()
         {
             InitializeComponent();
+
+            SDCardWriterReader SDReader = new SDCardWriterReader();
+            SDReader.WriteToSDCardAsync();
+
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             txtblockTime.Text = dt.TimeOfDay.ToString();
