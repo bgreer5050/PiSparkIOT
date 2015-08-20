@@ -10,27 +10,29 @@ namespace SparkPi
 {
     public class SDCardWriterReader
     {
+        StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+
         public async void WriteToSDCardAsync()
         {
+
+            StorageFile sampleFile = await folder.CreateFileAsync("sample.txt", CreationCollisionOption.OpenIfExists);
+
+            Debug.WriteLine(sampleFile.Path);
+
+            Debug.WriteLine("PAUSE");
+
+        }
+
+
+        public async void WriteToCard(string strFileName,IEnumerable<string> listLinesToWrite)
+        {
+            IStorageItem item = await folder.GetItemAsync(strFileName);
+            StorageFile file = (StorageFile)item;
+
+
+
+            await Windows.Storage.FileIO.WriteLinesAsync(file, listLinesToWrite);
             
-
-            StorageFolder externalDevices = Windows.Storage.KnownFolders.RemovableDevices;
-             //StorageFolder folder = await externalDevices.CreateFolderAsync("TestX");
-           
-
-                StorageFolder sdCard = (await externalDevices.GetFoldersAsync()).FirstOrDefault();
-
-            if (sdCard != null)
-            {
-                Debug.WriteLine("SD CARD AVAILABLE");
-            }
-            else
-            {
-                Debug.WriteLine("NO SD CARD AVAILABLE");
-
-            }
-
-            Debug.WriteLine("Pause");
         }
     }
 }
