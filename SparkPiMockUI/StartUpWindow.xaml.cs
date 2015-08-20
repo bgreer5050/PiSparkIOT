@@ -23,7 +23,12 @@ namespace SparkPiMockUI
     public partial class StartUpWindow : Window
     {
         public static DateTime timeOfSystemStartup;
-
+        private static DateTime timeOfLastSystemStateChange;
+        private static DateTime timeOfLastHeartbeat;
+        private static long numberOfHeartBeatsSinceLastStateChange;
+        private static long totalNumberOfCycles;
+        private static long totalRuntimeMilliseconds;
+        public static SystemState currentSystemState;
 
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
@@ -159,5 +164,30 @@ namespace SparkPiMockUI
             int result = await AccessTheWebAsync();
            // txtBlockURLLength.Text = result.ToString();
         }
+
+        private static long getMillisecondsSinceLastStateChange(DateTime time)
+        {
+            TimeSpan ts = time - timeOfLastSystemStateChange;
+            return ts.Ticks / TimeSpan.TicksPerMillisecond;
+        }
+        private static long getMillisecondsSinceLastHeartBeat(DateTime time)
+        {
+            Debug.GC(true);
+            TimeSpan ts = time - timeOfLastHeartbeat;
+            return ts.Ticks / TimeSpan.TicksPerMillisecond;
+        }
+
+        public enum SystemState
+        {
+            DOWN = 0,
+            RUNNING
+        };
+        public struct MachineEvent
+        {
+            public string AssetID { get; set; }
+            public string state { get; set; }
+            public string ticks { get; set; }
+        }
     }
+
 }

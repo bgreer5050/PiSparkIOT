@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
@@ -14,11 +15,21 @@ namespace SparkPi
     public sealed partial class StartPage : Page
     {
         public static DateTime timeOfSystemStartup;
+        private static DateTime timeOfLastSystemStateChange;
+        private static DateTime timeOfLastHeartbeat;
+        private static long numberOfHeartBeatsSinceLastStateChange;
+        private static long totalNumberOfCycles;
+        private static long totalRuntimeMilliseconds;
+        public static SystemState currentSystemState;
 
-        private const int LED_PIN = 5;
-      
-        private GpioPin pin;
-        private GpioPinValue pinValue;
+        /// <summary>
+        /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
+        /// </summary>
+        private const int LED_PIN = 6;
+        private const int BUTTON_PIN = 5;
+        private GpioPin ledPin;
+        private GpioPin heartBeatPin;
+        //***********************************************************************************
 
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
@@ -32,6 +43,8 @@ namespace SparkPi
         public Configuration configuration;
         public Controller controller;
 
+
+        
 
         Utilities.PiDateTime piDateTime = new Utilities.PiDateTime();
 
@@ -105,10 +118,27 @@ namespace SparkPi
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
+
+          
+
+
+        }
+
+        private void setUpBoardIO()
+        {
+            currentSystemState = SystemState.DOWN;
+            var gpioController = GpioController.GetDefault();
+            heartBeatPin = gpioController.OpenPin(5);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
             
         }
 
-
+        private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
+        {
+            Debug.WriteLine(sender.Read().ToString());
+        }
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
@@ -199,5 +229,30 @@ namespace SparkPi
         {
 
         }
+
+        private static long getMillisecondsSinceLastStateChange(DateTime time)
+        {
+            TimeSpan ts = time - timeOfLastSystemStateChange;
+            return ts.Ticks / TimeSpan.TicksPerMillisecond;
+        }
+        private static long getMillisecondsSinceLastHeartBeat(DateTime time)
+        {
+            Debug.GC(true);
+            TimeSpan ts = time - timeOfLastHeartbeat;
+            return ts.Ticks / TimeSpan.TicksPerMillisecond;
+        }
+
+        public enum SystemState
+        {
+            DOWN = 0,
+            RUNNING
+        };
+        public struct MachineEvent
+        {
+            public string AssetID { get; set; }
+            public string state { get; set; }
+            public string ticks { get; set; }
+        }
     }
+
 }
