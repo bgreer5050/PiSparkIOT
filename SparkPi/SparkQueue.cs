@@ -42,11 +42,11 @@ namespace SparkPi
             outboundQueue = new Queue();
             setupDirectoryAndFileStructure();
 
-            if (Program.strPowerOuttageMissedDownEvent.Length > 1)
-            {
-                this.Enqueue(Program.strPowerOuttageMissedDownEvent);
-                Program.strPowerOuttageMissedDownEvent = "";
-            }
+            //if (Program.strPowerOuttageMissedDownEvent.Length > 1)
+            //{
+            //    this.Enqueue(Program.strPowerOuttageMissedDownEvent);
+            //    Program.strPowerOuttageMissedDownEvent = "";
+            //}
 
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
