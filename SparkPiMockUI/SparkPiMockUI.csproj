@@ -56,6 +56,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Network.cs" />
+    <Compile Include="SparkQueue.cs" />
     <Compile Include="Utilities\PiDateTime.cs" />
     <Compile Include="Utilities\SparkEmail.cs" />
     <Page Include="StartUpWindow.xaml">

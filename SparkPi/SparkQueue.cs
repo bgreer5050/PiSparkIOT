@@ -28,13 +28,16 @@ namespace SparkPi
         private Timer InboundDataTimer;
         private Timer OutboundDataTimer;
         private Object FILELOCK = new Object();
-        public SparkQueue() : this("\\SD", "SparkEventsDB") { }
-        public SparkQueue(string subDirectory) : this(subDirectory, "SparkEventsDB") { }
+        public StorageFolder folder;
+        public StorageFile file;
+   
         public SparkQueue(string subDirectory, string fileName)
         {
             SubDirectoryPath = subDirectory;
             DataFileName = fileName;
             QueueCycleMilliSeconds = 250;
+           
+
             initializeClass();
         }
         private void initializeClass()
@@ -75,7 +78,6 @@ namespace SparkPi
                 {
                     inboundQueue.Dequeue();
                 }
-
             }
         }
         private void ProcessOutboundEvent(object o)
