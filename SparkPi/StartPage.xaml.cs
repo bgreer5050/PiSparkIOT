@@ -31,6 +31,7 @@ namespace SparkPi
 
         System.Threading.SynchronizationContext _uiSyncContext;
 
+        SparkQueue queue = new SparkQueue();
 
         public StartPage()
         {

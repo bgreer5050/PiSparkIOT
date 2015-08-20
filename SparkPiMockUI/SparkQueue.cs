@@ -19,27 +19,39 @@ namespace SparkPiMockUI
         public string DataFileName { get; set; }
         public string FullFilePath
         {
-            get { return SubDirectoryPath + "\\" + DataFileName; }
+            get { return System.IO.Directory.GetCurrentDirectory() + "\\" + DataFileName; }
         }
         private Queue inboundQueue;
         private Queue outboundQueue;
         private Timer InboundDataTimer;
         private Timer OutboundDataTimer;
         private Object FILELOCK = new Object();
-        public SparkQueue() : this("\\SD", "SparkEventsDB") { }
-        public SparkQueue(string subDirectory) : this(subDirectory, "SparkEventsDB") { }
-        public SparkQueue(string subDirectory, string fileName)
+      
+
+        public SparkQueue()
         {
-            SubDirectoryPath = subDirectory;
-            DataFileName = fileName;
+            //SubDirectoryPath = subDirectory;
+            //DataFileName = fileName;
+
+         
+            if(File.Exists(FullFilePath)==false)
+            {
+                FileStream fs = File.Create(FullFilePath);
+                fs.Flush();
+                fs.Dispose();
+            }
+
+            //this.file = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).GetResults();
+            //file = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
+
             QueueCycleMilliSeconds = 250;
+
             initializeClass();
         }
         private void initializeClass()
         {
             inboundQueue = new Queue();
             outboundQueue = new Queue();
-            setupDirectoryAndFileStructure();
 
             //if (Program.strPowerOuttageMissedDownEvent.Length > 1)
             //{
@@ -50,17 +62,7 @@ namespace SparkPiMockUI
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 250, 250);
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
         }
-        private void setupDirectoryAndFileStructure()
-        {
-            if (!Directory.Exists(SubDirectoryPath))
-            {
-                Directory.CreateDirectory(SubDirectoryPath);
-            }
-            if (!File.Exists(FullFilePath))
-            {
-                File.Create(FullFilePath);
-            }
-        }
+
         private async void ProcessInboundEventAsync(object o)
         {
             //Debug.Print("Check For Inbound");
@@ -73,7 +75,6 @@ namespace SparkPiMockUI
                 {
                     inboundQueue.Dequeue();
                 }
-
             }
         }
         private void ProcessOutboundEvent(object o)
@@ -95,26 +96,24 @@ namespace SparkPiMockUI
                 }
             }
         }
-        private async Task<bool> writeDataToFileAsync(string line)
+        private bool writeDataToFileAsync(string line)
         {
             bool result = false;
-            // var result = new TaskCompletionSource<bool>();
-            StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
             if (File.Exists(FullFilePath))
             {
-
-                StreamWriter writer = new StreamWriter(await dbFile.OpenStreamForWriteAsync());
-
-
-                writer.WriteLine(line);
-                writer.Flush();
-                result = true;
-
+                lock (FILELOCK)
+                {
+                    using (StreamWriter writer = new StreamWriter(FullFilePath, true))
+                    {
+                        writer.WriteLine(line);
+                        writer.Flush();
+                        result = true;
+                    }
+                }
             }
             return result;
         }
-        private async void readDataFromFileAsync()
+        private void readDataFromFileAsync()
         {
             if (File.Exists(FullFilePath))
             {
@@ -123,9 +122,8 @@ namespace SparkPiMockUI
 
                 try
                 {
-                    StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                    StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
-                    using (StreamReader reader = new StreamReader(await file.OpenStreamForReadAsync()))
+
+                    using (StreamReader reader = new StreamReader(FullFilePath))
                     {
                         line = reader.ReadLine();
                         reader.Dispose();
@@ -173,7 +171,7 @@ namespace SparkPiMockUI
                         }
                         else
                         {
-                            Debug.Print("LINE BEING REMOVED");
+                            Debug.WriteLine("LINE BEING REMOVED");
                         }
                     }
                     result = true;

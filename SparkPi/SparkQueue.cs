@@ -31,12 +31,16 @@ namespace SparkPi
         public StorageFolder folder;
         public StorageFile file;
    
-        public SparkQueue(string subDirectory, string fileName)
+        public SparkQueue()
         {
-            SubDirectoryPath = subDirectory;
-            DataFileName = fileName;
+            //SubDirectoryPath = subDirectory;
+            //DataFileName = fileName;
+
+            this.folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+            this.file =  folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).GetResults();
+            //file = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
+
             QueueCycleMilliSeconds = 250;
-           
 
             initializeClass();
         }
@@ -44,7 +48,6 @@ namespace SparkPi
         {
             inboundQueue = new Queue();
             outboundQueue = new Queue();
-            setupDirectoryAndFileStructure();
 
             //if (Program.strPowerOuttageMissedDownEvent.Length > 1)
             //{
@@ -55,17 +58,7 @@ namespace SparkPi
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 250, 250);
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
         }
-        private void setupDirectoryAndFileStructure()
-        {
-            if (!Directory.Exists(SubDirectoryPath))
-            {
-                Directory.CreateDirectory(SubDirectoryPath);
-            }
-            if (!File.Exists(FullFilePath))
-            {
-                File.Create(FullFilePath);
-            }
-        }
+      
         private async void ProcessInboundEventAsync(object o)
         {
             //Debug.Print("Check For Inbound");
