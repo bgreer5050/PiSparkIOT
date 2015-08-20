@@ -62,7 +62,7 @@ namespace SparkPi
                 File.Create(FullFilePath);
             }
         }
-        private void ProcessInboundEvent(object o)
+        private async void ProcessInboundEventAsync(object o)
         {
             //Debug.Print("Check For Inbound");
             while (inboundQueue.Count > 0)
@@ -70,7 +70,7 @@ namespace SparkPi
                 Debug.WriteLine("YES - Inbound Exists");
 
                 var line = inboundQueue.Peek().ToString();
-                if (writeDataToFileAsync(line))
+                if (await writeDataToFileAsync(line))
                 {
                     inboundQueue.Dequeue();
                 }
