@@ -103,6 +103,7 @@
     </Compile>
     <Compile Include="Controller.cs" />
     <Compile Include="SDCardWriterReader.cs" />
+    <Compile Include="SparkQueue.cs" />
     <Compile Include="StartPage.xaml.cs">
       <DependentUpon>StartPage.xaml</DependentUpon>
     </Compile>

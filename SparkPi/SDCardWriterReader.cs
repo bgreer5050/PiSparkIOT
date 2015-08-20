@@ -1,17 +1,21 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
+
 
 namespace SparkPi
 {
     public class SDCardWriterReader
     {
         StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-
+        
         public async void WriteToSDCardAsync()
         {
 
@@ -23,16 +27,24 @@ namespace SparkPi
 
         }
 
+        private ConcurrentDictionary<string, SemaphoreSlim> fileLocks = new ConcurrentDictionary<string, SemaphoreSlim>();
 
-        public async void WriteToCard(string strFileName,IEnumerable<string> listLinesToWrite)
+        public async Task WriteToCardAsync(string strFileName, IEnumerable<string> listLinesToWrite)
         {
-            IStorageItem item = await folder.GetItemAsync(strFileName);
-            StorageFile file = (StorageFile)item;
+            var semaphoreSlim = fileLocks.GetOrAdd(strFileName, new SemaphoreSlim(1, 1));
 
+            await semaphoreSlim.WaitAsync();
+            try
+            {
+                IStorageItem item = await folder.GetItemAsync(strFileName);
+                StorageFile file = (StorageFile)item;
 
-
-            await Windows.Storage.FileIO.WriteLinesAsync(file, listLinesToWrite);
-            
+                await Windows.Storage.FileIO.WriteLinesAsync(file, listLinesToWrite);
+            }
+            finally
+            {
+                semaphoreSlim.Release();
+            }
         }
     }
 }
