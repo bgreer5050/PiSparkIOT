@@ -48,7 +48,7 @@ namespace SparkPi
             //    Program.strPowerOuttageMissedDownEvent = "";
             //}
 
-            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
+            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 250, 250);
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
         }
         private void setupDirectoryAndFileStructure()
@@ -85,7 +85,7 @@ namespace SparkPi
             {
                 //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
 
-                readDataFromFile();
+                readDataFromFileAsync();
             }
             else
             {
@@ -101,7 +101,7 @@ namespace SparkPi
              bool result = false;
            // var result = new TaskCompletionSource<bool>();
             StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB", CreationCollisionOption.OpenIfExists);
+            StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
             if (File.Exists(FullFilePath))
             {
                
@@ -115,36 +115,35 @@ namespace SparkPi
             }
             return result;
         }
-        private void readDataFromFile()
+        private async void readDataFromFileAsync()
         {
             if (File.Exists(FullFilePath))
             {
                 var line = "";
-                lock (FILELOCK)
-                {
+                
 
                     try
                     {
-                        using (StreamReader reader = new StreamReader(FullFilePath))
+                    StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                    StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
+                        using (StreamReader reader = new StreamReader(await file.OpenStreamForReadAsync()))
                         {
                             line = reader.ReadLine();
-                            reader.Close();
+                            reader.Dispose();
                         }
                     }
                     catch (System.IO.IOException ex)
                     {
-                        Debug.WriteLine(ex.Message);
-                        Logger.LogToSD("L131 SparkQueue" + ex.Message);
+                    throw;
                     }
-                }
                 if (line != null)
                 {
-                    Debug.Print("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
+                    Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
                     outboundQueue.Enqueue(line);
-                    //if (DataReadyForPickUp != null)
-                    //{
-                    //    DataReadyForPickUp(this, new EventArgs());
-                    //}
+                    if (DataReadyForPickUp != null)
+                    {
+                        DataReadyForPickUp(this, new EventArgs());
+                    }
                 }
             }
         }
