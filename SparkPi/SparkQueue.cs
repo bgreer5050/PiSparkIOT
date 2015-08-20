@@ -213,26 +213,31 @@ namespace SparkPi
         {
             get
             {
-                int records = 0;
-                if (File.Exists(FullFilePath))
-                {
                     lock (FILELOCK)
                     {
-                        StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                        var result = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
-
-                        using (StreamReader reader = new StreamReader(result.OpenStreamForReadAsync().Result)
-                        {
-                            string line = "";
-                            while ((line = reader.ReadLine()) != null)
-                            {
-                                records++;
-                            }
-                        }
+                    return GetCountAsync().Result; 
                     }
-                }
-                return records;
             }
+        }
+
+        private async Task<int> GetCountAsync()
+        {
+            await Task.Delay(100);
+            int records = 0;
+            if (File.Exists(FullFilePath))
+            {
+                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
+                StreamReader reader = new StreamReader(await file.OpenStreamForReadAsync());
+
+                string line = "";
+                while((line = reader.ReadLine()) != null  )
+                {
+                    records++;
+                }
+
+            }
+            return records;
         }
     }
 }
