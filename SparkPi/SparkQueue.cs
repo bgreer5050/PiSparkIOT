@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -196,7 +197,7 @@ namespace SparkPi
             if (outboundQueue.Count > 0)
             {
                 line = outboundQueue.Peek().ToString();
-                if (removeDataFromFileAsync(line))
+                if (removeDataFromFileAsync(line).Result)
                 {
                     outboundQueue.Dequeue();
                     blnSuccess = true;
@@ -217,7 +218,10 @@ namespace SparkPi
                 {
                     lock (FILELOCK)
                     {
-                        using (StreamReader reader = new StreamReader(FullFilePath))
+                        StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                        var result = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
+
+                        using (StreamReader reader = new StreamReader(result.OpenStreamForReadAsync().Result)
                         {
                             string line = "";
                             while ((line = reader.ReadLine()) != null)
