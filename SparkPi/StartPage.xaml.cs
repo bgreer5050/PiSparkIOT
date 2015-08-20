@@ -27,7 +27,13 @@ namespace SparkPi
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
-		Utilities.PiDateTime piDateTime = new Utilities.PiDateTime();
+
+        public Network network;
+        public Configuration configuration;
+        public Controller controller;
+
+
+        Utilities.PiDateTime piDateTime = new Utilities.PiDateTime();
 
         System.Threading.SynchronizationContext _uiSyncContext;
 
@@ -63,6 +69,12 @@ namespace SparkPi
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
             txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
 
+
+            controller = new Controller();
+            configuration = new Configuration();
+            network = new Network();
+
+
             Utilities.SparkEmail.Send("TEST FROM PI");
         }
 
@@ -93,7 +105,7 @@ namespace SparkPi
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
-
+            
         }
 
 

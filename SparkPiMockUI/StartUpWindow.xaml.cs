@@ -37,6 +37,10 @@ namespace SparkPiMockUI
 
         int intShowDateTimeFlag;
 
+        public Network network;
+        public Configuration configuration;
+        public Controller controller;
+
         public StartUpWindow()
         {
             InitializeComponent();
@@ -62,9 +66,9 @@ namespace SparkPiMockUI
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
 
 
-            Controller controller = new Controller();
-            Configuration configuration = new Configuration();
-            Network network = new Network();
+             controller = new Controller();
+             configuration = new Configuration();
+             network = new Network();
 
             setUpSystem();
 
@@ -75,6 +79,8 @@ namespace SparkPiMockUI
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
+
+
 
         }
 
@@ -138,19 +144,20 @@ namespace SparkPiMockUI
 
         async Task<int> AccessTheWebAsync()
         {
-            System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
+            //System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
-            Task<string> getStringTask = client.GetStringAsync(@"http://yahoo.com");
-            string urlContents = await getStringTask;
+            //Task<string> getStringTask = client.GetStringAsync(@"http://yahoo.com");
+            //string urlContents = await getStringTask;
 
-            return urlContents.Length;
+            //return urlContents.Length;
+            return 1;
 
         }
 
         private async void btnTest_Click(object sender, RoutedEventArgs e)
         {
             int result = await AccessTheWebAsync();
-            txtBlockURLLength.Text = result.ToString();
+           // txtBlockURLLength.Text = result.ToString();
         }
     }
 }
