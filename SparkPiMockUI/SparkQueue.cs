@@ -68,13 +68,14 @@ namespace SparkPiMockUI
             //Debug.Print("Check For Inbound");
             while (inboundQueue.Count > 0)
             {
-                Debug.WriteLine("YES - Inbound Exists");
+                Debug.Print("YES - Inbound Exists");
 
                 var line = inboundQueue.Peek().ToString();
-                if (await writeDataToFileAsync(line))
+                if (writeDataToFile(line))
                 {
                     inboundQueue.Dequeue();
                 }
+
             }
         }
         private void ProcessOutboundEvent(object o)
@@ -96,7 +97,7 @@ namespace SparkPiMockUI
                 }
             }
         }
-        private bool writeDataToFileAsync(string line)
+        private bool writeDataToFile(string line)
         {
             bool result = false;
             if (File.Exists(FullFilePath))
@@ -144,37 +145,38 @@ namespace SparkPiMockUI
                 }
             }
         }
-        private async Task<bool> removeDataFromFileAsync(string lineToRemove)
+        private bool removeDataFromFile(string lineToRemove)
         {
-            bool result = false;
+            var result = false;
             if (File.Exists(FullFilePath))
             {
-                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
-                var lines = new ArrayList();
-                using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
+                lock (FILELOCK)
                 {
-                    string line = "";
-                    while ((line = reader.ReadLine()) != null)
+                    var lines = new ArrayList();
+                    using (var reader = new StreamReader(FullFilePath))
                     {
-                        lines.Add(line);
-                    }
-                }
-                using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
-                {
-                    foreach (var l in lines)
-                    {
-                        if (l.ToString() != lineToRemove)
+                        string line = "";
+                        while ((line = reader.ReadLine()) != null)
                         {
-                            writer.WriteLine(l);
-                            writer.Flush();
-                        }
-                        else
-                        {
-                            Debug.WriteLine("LINE BEING REMOVED");
+                            lines.Add(line);
                         }
                     }
-                    result = true;
+                    using (StreamWriter writer = new StreamWriter(FullFilePath))
+                    {
+                        foreach (var l in lines)
+                        {
+                            if (l.ToString() != lineToRemove)
+                            {
+                                writer.WriteLine(l);
+                                writer.Flush();
+                            }
+                            else
+                            {
+                                Debug.Print("LINE BEING REMOVED");
+                            }
+                        }
+                        result = true;
+                    }
                 }
             }
             return result;
@@ -193,7 +195,7 @@ namespace SparkPiMockUI
             if (outboundQueue.Count > 0)
             {
                 line = outboundQueue.Peek().ToString();
-                if (removeDataFromFileAsync(line).Result)
+                if (removeDataFromFile(line))
                 {
                     outboundQueue.Dequeue();
                     blnSuccess = true;
@@ -209,31 +211,24 @@ namespace SparkPiMockUI
         {
             get
             {
-                lock (FILELOCK)
+                int records = 0;
+                if (File.Exists(FullFilePath))
                 {
-                    return GetCountAsync().Result;
+                    lock (FILELOCK)
+                    {
+                        using (StreamReader reader = new StreamReader(FullFilePath))
+                        {
+                            string line = "";
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                records++;
+                            }
+                        }
+                    }
                 }
+                return records;
             }
-        }
 
-        private async Task<int> GetCountAsync()
-        {
-            await Task.Delay(100);
-            int records = 0;
-            if (File.Exists(FullFilePath))
-            {
-                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
-                StreamReader reader = new StreamReader(await file.OpenStreamForReadAsync());
-
-                string line = "";
-                while ((line = reader.ReadLine()) != null)
-                {
-                    records++;
-                }
-
-            }
-            return records;
         }
     }
 }
