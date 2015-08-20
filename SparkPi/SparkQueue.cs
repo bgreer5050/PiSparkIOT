@@ -147,15 +147,15 @@ namespace SparkPi
                 }
             }
         }
-        private bool removeDataFromFile(string lineToRemove)
+        private async Task<bool> removeDataFromFileAsync(string lineToRemove)
         {
-            var result = false;
+            bool result = false;
             if (File.Exists(FullFilePath))
             {
-                lock (FILELOCK)
-                {
-                    var lines = new ArrayList();
-                    using (var reader = new StreamReader(FullFilePath))
+                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
+                var lines = new ArrayList();
+                    using (var reader = new StreamReader(await file.OpenStreamForReadAsync()))
                     {
                         string line = "";
                         while ((line = reader.ReadLine()) != null)
@@ -163,7 +163,7 @@ namespace SparkPi
                             lines.Add(line);
                         }
                     }
-                    using (StreamWriter writer = new StreamWriter(FullFilePath))
+                    using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
                     {
                         foreach (var l in lines)
                         {
@@ -174,12 +174,11 @@ namespace SparkPi
                             }
                             else
                             {
-                                Debug.Print("LINE BEING REMOVED");
+                                Debug.WriteLine("LINE BEING REMOVED");
                             }
                         }
                         result = true;
                     }
-                }
             }
             return result;
         }
@@ -197,7 +196,7 @@ namespace SparkPi
             if (outboundQueue.Count > 0)
             {
                 line = outboundQueue.Peek().ToString();
-                if (removeDataFromFile(line))
+                if (removeDataFromFileAsync(line))
                 {
                     outboundQueue.Dequeue();
                     blnSuccess = true;
