@@ -121,19 +121,22 @@ namespace SparkPi
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
+            currentSystemState = SystemState.DOWN;
 
         }
 
         private void setUpBoardIO()
         {
-            currentSystemState = SystemState.DOWN;
 
-            var gpioController = GpioController.GetDefault();
-            heartBeatPin = gpioController.OpenPin(5);
-            heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            //var gpioController = GpioController.GetDefault();
+            //heartBeatPin = gpioController.OpenPin(5);
+            //heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
             
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
-            heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
+            //heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            //heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
+
+
+
             
         }
 
