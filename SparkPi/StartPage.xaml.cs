@@ -26,7 +26,7 @@ namespace SparkPi
         /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
         /// </summary>
         private const int LED_PIN = 6;
-        private const int BUTTON_PIN = 5;
+        private const int HEARTBEAT_PIN = 5;
         private GpioPin ledPin;
         private GpioPin heartBeatPin;
         //***********************************************************************************
@@ -63,21 +63,24 @@ namespace SparkPi
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             txtblockTime.Text = dt.TimeOfDay.ToString();
 
-            timer = new DispatcherTimer();
-            timer.Interval = TimeSpan.FromMilliseconds(500);
-            timer.Tick += Timer_Tick;
+            //timer = new DispatcherTimer();
+            //timer.Interval = TimeSpan.FromMilliseconds(500);
+            //timer.Tick += Timer_Tick;
 
             timerDateTime = new DispatcherTimer();
             timerDateTime.Interval = TimeSpan.FromMilliseconds(3500);
             //timerDateTime.Tick += TimerDateTime_Tick;
             timerDateTime.Tick += TimerDateTime_Tick1;
             timerDateTime.Start();
-            InitGPIO();
-            if (pin != null)
-            {
-                timer.Start();
-			setUpSystem();
-            }
+            setUpSystem();
+            setUpBoardIO();
+
+
+   //         if (pin != null)
+   //         {
+   //             timer.Start();
+			//setUpSystem();
+   //         }
             
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
             txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
@@ -119,24 +122,24 @@ namespace SparkPi
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
 
-          
-
-
         }
 
         private void setUpBoardIO()
         {
             currentSystemState = SystemState.DOWN;
+
             var gpioController = GpioController.GetDefault();
             heartBeatPin = gpioController.OpenPin(5);
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
             
         }
 
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
+            txtblockTime.Text = "BHBJHBJHBH";
             Debug.WriteLine(sender.Read().ToString());
         }
 
@@ -162,45 +165,45 @@ namespace SparkPi
            
         }
 
-        private void InitGPIO()
-        {
-            var gpio = GpioController.GetDefault();
+        //private void InitGPIO()
+        //{
+        //    var gpio = GpioController.GetDefault();
 
-            // Show an error if there is no GPIO controller
-            if (gpio == null)
-            {
-                pin = null;
-                GpioStatus.Text = "There is no GPIO controller on this device.";
-                return;
-            }
+        //    // Show an error if there is no GPIO controller
+        //    if (gpio == null)
+        //    {
+        //        pin = null;
+        //        GpioStatus.Text = "There is no GPIO controller on this device.";
+        //        return;
+        //    }
 
-            pin = gpio.OpenPin(LED_PIN);
-            pinValue = GpioPinValue.High;
-            pin.Write(pinValue);
-            pin.SetDriveMode(GpioPinDriveMode.Output);
+        //    pin = gpio.OpenPin(LED_PIN);
+        //    pinValue = GpioPinValue.High;
+        //    pin.Write(pinValue);
+        //    pin.SetDriveMode(GpioPinDriveMode.Output);
 
 
-            GpioStatus.Text = "GPIO pin initialized correctly.";
+        //    GpioStatus.Text = "GPIO pin initialized correctly.";
 
-        }
+        //}
 
-        private void Timer_Tick(object sender, object e)
-        {
-            if (pinValue == GpioPinValue.High)
-            {
-                pinValue = GpioPinValue.Low;
-                pin.Write(pinValue);
-                redLED.Fill = redBrush;
-                greenLED.Fill = grayBrush;
-            }
-            else
-            {
-                pinValue = GpioPinValue.High;
-                pin.Write(pinValue);
-                redLED.Fill = grayBrush;
-                greenLED.Fill = greenBrush;
-            }
-        }
+        //private void Timer_Tick(object sender, object e)
+        //{
+        //    if (pinValue == GpioPinValue.High)
+        //    {
+        //        pinValue = GpioPinValue.Low;
+        //        pin.Write(pinValue);
+        //        redLED.Fill = redBrush;
+        //        greenLED.Fill = grayBrush;
+        //    }
+        //    else
+        //    {
+        //        pinValue = GpioPinValue.High;
+        //        pin.Write(pinValue);
+        //        redLED.Fill = grayBrush;
+        //        greenLED.Fill = greenBrush;
+        //    }
+        //}
 
 
         async Task<int> AccessTheWebAsync()
@@ -237,7 +240,7 @@ namespace SparkPi
         }
         private static long getMillisecondsSinceLastHeartBeat(DateTime time)
         {
-            Debug.GC(true);
+         
             TimeSpan ts = time - timeOfLastHeartbeat;
             return ts.Ticks / TimeSpan.TicksPerMillisecond;
         }
