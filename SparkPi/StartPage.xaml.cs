@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -33,6 +34,9 @@ namespace SparkPi
 
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
+        private DispatcherTimer TimerUpdateUI;
+        private string Test = "";
+
         int intShowDateTimeFlag = 1;
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
@@ -72,6 +76,14 @@ namespace SparkPi
             //timerDateTime.Tick += TimerDateTime_Tick;
             timerDateTime.Tick += TimerDateTime_Tick1;
             timerDateTime.Start();
+
+
+            TimerUpdateUI = new DispatcherTimer();
+            TimerUpdateUI.Interval = TimeSpan.FromMilliseconds(500);
+            TimerUpdateUI.Tick += TimerUpdateUI_Tick;
+            TimerUpdateUI.Start();
+
+
             setUpSystem();
             setUpBoardIO();
 
@@ -96,6 +108,8 @@ namespace SparkPi
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
+            Test = "BLANK";
+
             if (intShowDateTimeFlag == 1)
             {
                 txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
@@ -128,23 +142,32 @@ namespace SparkPi
         private void setUpBoardIO()
         {
 
-            //var gpioController = GpioController.GetDefault();
-            //heartBeatPin = gpioController.OpenPin(5);
-            //heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            
-            //heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
-            //heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
+            var gpioController = GpioController.GetDefault();
+            heartBeatPin = gpioController.OpenPin(5);
+            heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
 
 
-            
+
         }
 
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
-            txtblockTime.Text = "BHBJHBJHBH";
+            Test = "HEART BEAT RECEIVED";
+           
             Debug.WriteLine(sender.Read().ToString());
         }
+
+        private void TimerUpdateUI_Tick(object sender, object e)
+        {
+            txtblockTime.Text = Test;
+
+
+        }
+
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
