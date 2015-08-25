@@ -15,6 +15,18 @@ namespace SparkPi
 {
     public sealed partial class StartPage : Page
     {
+        /// <summary>
+        /// Main Classes ***********************************************************************************
+        /// </summary>
+        public Network network;
+        public Configuration configuration;
+        public Controller controller;
+        //***************************************************************************************************
+
+
+        /// <summary>
+        /// Data Collection Variables **********************************************************************
+        /// </summary>
         public static DateTime timeOfSystemStartup;
         private static DateTime timeOfLastSystemStateChange;
         private static DateTime timeOfLastHeartbeat;
@@ -22,33 +34,52 @@ namespace SparkPi
         private static long totalNumberOfCycles;
         private static long totalRuntimeMilliseconds;
         public static SystemState currentSystemState;
+        //****************************************************************************************************
+
 
         /// <summary>
         /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
         /// </summary>
         private const int LED_PIN = 6;
         private const int HEARTBEAT_PIN = 5;
-        private GpioPin ledPin;
+
+//        private GpioPin ledPin;
         private GpioPin heartBeatPin;
         //***********************************************************************************
 
+
+
+        /// <summary>
+        /// Timers **********************************************************************
+        /// </summary>
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
         private DispatcherTimer TimerUpdateUI;
-        private string Test = "";
+        //************************************************************************************
 
-        int intShowDateTimeFlag = 1;
+        /// <summary>
+        /// UI VARIABLES **********************************************************************
+        /// </summary>
+        private string Test = "";
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
+        //**************************************************************************************
 
-        public Network network;
-        public Configuration configuration;
-        public Controller controller;
+        /// <summary>
+        /// Flag Variables *********************************************************************
+        /// </summary>
+        int intShowDateTimeFlag = 1;
+        //**************************************************************************************
 
 
-        
+
+
+
+
+
+
 
         Utilities.PiDateTime piDateTime = new Utilities.PiDateTime();
 
@@ -103,7 +134,7 @@ namespace SparkPi
             network = new Network();
 
 
-            Utilities.SparkEmail.Send("TEST FROM PI");
+            //Utilities.SparkEmail.Send("TEST FROM PI");
         }
 
         private void TimerDateTime_Tick1(object sender, object e)
@@ -246,7 +277,7 @@ namespace SparkPi
         private async void  btnTest_Click(object sender, RoutedEventArgs e)
         {
            int result = await AccessTheWebAsync();
-            txtBlockURLLength.Text = result.ToString();
+           
         }
 
         private void btnSetMachineStatusRUN_Click(object sender, RoutedEventArgs e)

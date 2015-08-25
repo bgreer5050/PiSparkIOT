@@ -48,7 +48,7 @@ namespace SparkPiMockUI
 
         public StartUpWindow()
         {
-            InitializeComponent();
+             InitializeComponent();
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
 
 
@@ -70,12 +70,11 @@ namespace SparkPiMockUI
 
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
 
-
              controller = new Controller();
              configuration = new Configuration();
              network = new Network();
 
-            setUpSystem();
+             setUpSystem();
 
         }
 
@@ -83,10 +82,7 @@ namespace SparkPiMockUI
         {
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
-            txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
-
-
-
+             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
         }
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
@@ -121,10 +117,8 @@ namespace SparkPiMockUI
 
         private void Timer_Tick(object sender, object e)
         {
-          
                 redLED.Fill = redBrush;
                 greenLED.Fill = grayBrush;
-           
         }
         private void btnSetMachineStatusRUN_Click(object sender, RoutedEventArgs e)
         {
@@ -145,7 +139,6 @@ namespace SparkPiMockUI
         {
 
         }
-
 
         async Task<int> AccessTheWebAsync()
         {
@@ -172,7 +165,7 @@ namespace SparkPiMockUI
         }
         private static long getMillisecondsSinceLastHeartBeat(DateTime time)
         {
-            Debug.GC(true);
+           
             TimeSpan ts = time - timeOfLastHeartbeat;
             return ts.Ticks / TimeSpan.TicksPerMillisecond;
         }

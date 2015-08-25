@@ -37,7 +37,8 @@ namespace SparkPi
             //DataFileName = fileName;
 
             this.folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            this.file =  folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).GetResults();
+            this.file = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).AsTask().Result;
+            //GetResults();
             //file = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
 
             QueueCycleMilliSeconds = 250;
