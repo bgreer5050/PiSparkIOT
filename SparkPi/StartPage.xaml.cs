@@ -40,11 +40,13 @@ namespace SparkPi
         /// <summary>
         /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
         /// </summary>
-        private const int LED_PIN = 6;
-        private const int HEARTBEAT_PIN = 5;
+        //private const int LED_PIN = 6;
+        //private const int HEARTBEAT_PIN = 5;
 
 //        private GpioPin ledPin;
         private GpioPin heartBeatPin;
+        private GpioPin OutPutHeartBeatPinTesting;
+
         //***********************************************************************************
 
 
@@ -71,17 +73,21 @@ namespace SparkPi
         /// Flag Variables *********************************************************************
         /// </summary>
         int intShowDateTimeFlag = 1;
+        bool blnDateReceivedFromServer = false;
         //**************************************************************************************
 
+        /// <summary>
+        /// Testing Variables *******************************************************************
+        /// </summary>
+        int inputCounter = 0;
+        int outPutCounter = 0;
+        //***************************************************************************************
 
 
 
 
 
-
-
-
-        Utilities.PiDateTime piDateTime = new Utilities.PiDateTime();
+        Utilities.PiDateTime piDateTime; 
 
         System.Threading.SynchronizationContext _uiSyncContext;
 
@@ -103,7 +109,7 @@ namespace SparkPi
             //timer.Tick += Timer_Tick;
 
             timerDateTime = new DispatcherTimer();
-            timerDateTime.Interval = TimeSpan.FromMilliseconds(3500);
+            timerDateTime.Interval = TimeSpan.FromMilliseconds(300);
             //timerDateTime.Tick += TimerDateTime_Tick;
             timerDateTime.Tick += TimerDateTime_Tick1;
             timerDateTime.Start();
@@ -117,6 +123,7 @@ namespace SparkPi
 
             setUpSystem();
             setUpBoardIO();
+
 
 
    //         if (pin != null)
@@ -139,7 +146,18 @@ namespace SparkPi
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
-            Test = "BLANK";
+            //Test = "BLANK";
+
+            if(OutPutHeartBeatPinTesting.Read()==GpioPinValue.High)
+            {
+                OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
+            }
+            else
+            {
+                OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+                outPutCounter += 1;
+            }
+
 
             if (intShowDateTimeFlag == 1)
             {
@@ -158,7 +176,10 @@ namespace SparkPi
                 txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
                 intShowDateTimeFlag = 1;
             }
-            
+
+            Debug.WriteLine(inputCounter.ToString());
+            Debug.WriteLine(outPutCounter.ToString());
+
         }
 
         private void setUpSystem()
@@ -180,7 +201,8 @@ namespace SparkPi
             heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
-
+            OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
+            OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
 
 
         }
@@ -188,15 +210,23 @@ namespace SparkPi
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             Test = "HEART BEAT RECEIVED";
-           
+            if (sender.Read() == GpioPinValue.High)
+            {
+                inputCounter += 1;
+                totalNumberOfCycles += 1;
+            }
+
             Debug.WriteLine(sender.Read().ToString());
         }
 
         private void TimerUpdateUI_Tick(object sender, object e)
         {
-            txtblockTime.Text = Test;
+           // txtblockTime.Text = Test;
 
-
+            if(blnDateReceivedFromServer==false)
+            {
+               piDateTime = new Utilities.PiDateTime();
+            }
         }
 
 
