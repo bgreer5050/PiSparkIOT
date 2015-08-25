@@ -23,7 +23,7 @@ namespace SparkPi.Utilities
         {
 
             
-            GetDateTimeAsync().Wait();
+            //GetDateTimeAsync().Wait();
         }
 
         static async Task GetDateTimeAsync()
