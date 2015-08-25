@@ -159,23 +159,23 @@ namespace SparkPi
             }
 
 
-            if (intShowDateTimeFlag == 1)
-            {
-                txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
-                intShowDateTimeFlag = 2;
-            }
+            //if (intShowDateTimeFlag == 1)
+            //{
+            //    txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
+            //    intShowDateTimeFlag = 2;
+            //}
            
-            else if (intShowDateTimeFlag == 2)
-            {
-                txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
-                intShowDateTimeFlag = 3;
-            }
+            //else if (intShowDateTimeFlag == 2)
+            //{
+            //    txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
+            //    intShowDateTimeFlag = 3;
+            //}
 
-            else if (intShowDateTimeFlag == 3)
-            {
-                txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
-                intShowDateTimeFlag = 1;
-            }
+            //else if (intShowDateTimeFlag == 3)
+            //{
+            //    txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
+            //    intShowDateTimeFlag = 1;
+            //}
 
             Debug.WriteLine(inputCounter.ToString());
             Debug.WriteLine(outPutCounter.ToString());
