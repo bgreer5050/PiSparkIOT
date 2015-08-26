@@ -14,15 +14,14 @@
     <Resource Language="x-generate" />
   </Resources>
   <Applications>
-    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="Blinky.App">
-      <uap:VisualElements DisplayName="Blinky" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Blinky" BackgroundColor="transparent">
+    <Application Id="App" Executable="$targetnametoken$.exe" EntryPoint="SparkPi.App">
+      <uap:VisualElements DisplayName="SparkPi" Square150x150Logo="Assets\Square150x150Logo.png" Square44x44Logo="Assets\Square44x44Logo.png" Description="Production Productivity App" BackgroundColor="transparent">
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
         <uap:Extension Category="windows.fileTypeAssociation">
           <uap:FileTypeAssociation Name=".txt">
             <uap:DisplayName>Text</uap:DisplayName>
-            <uap:EditFlags OpenIsSafe="true" />
             <uap:SupportedFileTypes>
               <uap:FileType ContentType="text/txt">.txt</uap:FileType>
             </uap:SupportedFileTypes>
