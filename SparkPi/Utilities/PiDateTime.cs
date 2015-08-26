@@ -38,10 +38,15 @@ namespace SparkPi.Utilities
 
             
             string urlContents = await getStringTask;
-            long x;
-            if(long.TryParse(urlContents,out x))
+            long timeFromServerTicks;
+            if(long.TryParse(urlContents,out timeFromServerTicks))
             {
                 StartPage.blnDateReceivedFromServer = true;
+
+                DateTime dtFromServer = new DateTime(timeFromServerTicks);
+
+                UpdateOffset(dtFromServer);
+                Debug.Write(PiDateTime.Now.ToLocalTime());
             }
 
             return urlContents;
@@ -76,6 +81,9 @@ namespace SparkPi.Utilities
         }
 
 
+
+
+
         static TimeSpan _offset = new TimeSpan(0, 0, 0);
         public static TimeSpan CurrentOffset //Doesn't have to be public, it is for me because I'm presenting it on the UI for my information
         {
@@ -93,6 +101,15 @@ namespace SparkPi.Utilities
 
         static void UpdateOffset(DateTime currentCorrectTime) //May need to be public if you're getting the correct time outside of this class
         {
+            Debug.WriteLine("Local Time: " + DateTime.Now.ToLocalTime().ToString());
+            Debug.WriteLine("Time Of Day: " + DateTime.Now.TimeOfDay.ToString());
+            Debug.WriteLine("Universal Time: " + DateTime.Now.ToUniversalTime().ToString());
+            Debug.WriteLine("Hour: " + DateTime.Now.Hour.ToString());
+
+
+
+
+
             CurrentOffset = DateTime.UtcNow - currentCorrectTime;
             //Note that I'm getting network time which is in UTC, if you're getting local time use DateTime.Now instead of DateTime.UtcNow. 
         }
