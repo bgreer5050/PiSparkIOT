@@ -85,12 +85,6 @@ namespace SparkPi
         int outPutCounter = 0;
         //***************************************************************************************
 
-
-
-
-
-        Utilities.PiDateTime piDateTime; 
-
         System.Threading.SynchronizationContext _uiSyncContext;
 
         SparkQueue queue = new SparkQueue();
@@ -242,49 +236,28 @@ namespace SparkPi
 
         private void UpdateUI()
         {
-            CheckPiDateTime();
+           
         }
 
-        private void CheckPiDateTime()
-        {
-            if (blnDateReceivedFromServer == false)
-            {
-
-                try
-                {
-                    piDateTime = new Utilities.PiDateTime();
-                }
-                catch (Exception)
-                {
-
-                    // TODO Log and Notify
-                }
-
-                blnDateReceivedFromServer = false;
-            }
-            else
-            {
-                blnDateReceivedFromServer = true;
-            }
-        }
+       
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
             if (intShowDateTimeFlag == 1)
             {
-                txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
+                txtblockTime.Text = "Universal Time: " + DateTime.Now.ToUniversalTime();
                 intShowDateTimeFlag = 2;
             }
            
             else if (intShowDateTimeFlag == 2)
             {
-                txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
+                txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
                 intShowDateTimeFlag = 3;
             }
 
             else if (intShowDateTimeFlag == 3)
             {
-                txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
+                txtblockTime.Text = "Local Time: " + DateTime.Now.ToLocalTime();
                 intShowDateTimeFlag = 1;
             }
            
