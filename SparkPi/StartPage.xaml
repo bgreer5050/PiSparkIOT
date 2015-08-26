@@ -27,36 +27,42 @@
     xmlns:local="using:SparkPi"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    mc:Ignorable="d" Height="710">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-           
-           <!--TRAFFIC LIGHTS *********************************************************************************-->
-            <StackPanel Orientation="Horizontal">
-                <Ellipse x:Name="redLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
-                <Ellipse x:Name="yellowLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
-                <Ellipse x:Name="greenLED" Fill="LightGray" Stroke="White" Width="100" Height="100" Margin="10"/>
+
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="626" Margin="40,10,10,74" Width="310">
+            <StackPanel Height="120" Width="75">
+                <Image Source="Assets/logo.png" />
+            </StackPanel>
+
+            <!--TRAFFIC LIGHTS *********************************************************************************-->
+            <StackPanel Orientation="Horizontal" Margin="15">
+                <Ellipse x:Name="redLED" Fill="LightGray" Stroke="White" Width="70" Height="70" Margin="10"/>
+                <Ellipse x:Name="yellowLED" Fill="LightGray" Stroke="White" Width="70" Height="70" Margin="10"/>
+                <Ellipse x:Name="greenLED" Fill="LightGray" Stroke="White" Width="70" Height="70" Margin="10"/>
             </StackPanel>
             <!--TRAFFIC LIGHTS END*****************************************************************************-->
 
-            <TextBlock x:Name="DelayText" Text="500ms" Margin="10" TextAlignment="Center" FontSize="26.667" />
-            <TextBlock x:Name="GpioStatus" Text="Waiting to initialize GPIO..." Margin="10,50,10,10" TextAlignment="Center" FontSize="26.667" />
-            <TextBlock x:Name="txtblockTime" FontSize="25.667" Foreground="White" />
-           
+            <StackPanel>
+                <TextBlock x:Name="DelayText" Text="500ms" Margin="5" TextAlignment="Center" FontSize="26.667" />
 
-            <StackPanel Orientation="Horizontal" >
+                <TextBlock x:Name="txtblockTime" FontSize="25.667" Foreground="White" />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5" >
                 <TextBlock VerticalAlignment="Center">System Start Time:</TextBlock>
                 <TextBlock x:Name="txtSystemStartTime" VerticalAlignment="Center" TextWrapping="Wrap" Text="TextBlock"/>
             </StackPanel>
 
-           
 
-            <Button x:Name="btnTest" Margin="5" Click="btnTest_Click">Restart</Button>
-            <Button x:Name="btnSetMachineStatusRUN" Margin="5" Click="btnSetMachineStatusRUN_Click">Running</Button>
-            <Button x:Name="btnSetMachineStatusDOWN" Margin="5" Click="btnSetMachineStatusDOWN_Click">Down</Button>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button x:Name="btnTest" Margin="5" Click="btnTest_Click">Restart</Button>
+                <Button x:Name="btnSetMachineStatusRUN" Margin="5" Click="btnSetMachineStatusRUN_Click">Running</Button>
+                <Button x:Name="btnSetMachineStatusDOWN" Margin="5" Click="btnSetMachineStatusDOWN_Click">Down</Button>
+            </StackPanel>
             <!--<Button x:Name="btnCycleSimulate" Click="btnCycleSimulate_Click">Cycle</Button>-->
-            
+
             <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>
         </StackPanel>
     </Grid>
