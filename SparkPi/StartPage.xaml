@@ -50,9 +50,15 @@
                 <TextBlock x:Name="txtSystemStartTime" VerticalAlignment="Center" TextWrapping="Wrap" Text="TextBlock"/>
             </StackPanel>
 
-            <Button x:Name="btnTest" Click="btnTest_Click">Restart</Button>
-            <Button x:Name="btnSetMachineStatusRUN" Click="btnSetMachineStatusRUN_Click">Running</Button>
-            <Button x:Name="btnSetMachineStatusDOWN" Click="btnSetMachineStatusDOWN_Click">Down</Button>
+            <StackPanel Orientation="Vertical" Width="100">
+                <TextBlock>Date Time Updated:</TextBlock>
+                <Ellipse x:Name="PiTimeRed" Fill="Red" Stroke="White" Width="20" Height="20" Margin="10"/>
+                <Ellipse x:Name="PiTimeGreen" Fill="Green" Stroke="White" Width="20" Height="20" Margin="10"/>
+            </StackPanel>
+
+            <Button x:Name="btnTest" Margin="5" Click="btnTest_Click">Restart</Button>
+            <Button x:Name="btnSetMachineStatusRUN" Margin="5" Click="btnSetMachineStatusRUN_Click">Running</Button>
+            <Button x:Name="btnSetMachineStatusDOWN" Margin="5" Click="btnSetMachineStatusDOWN_Click">Down</Button>
             <!--<Button x:Name="btnCycleSimulate" Click="btnCycleSimulate_Click">Cycle</Button>-->
             
             <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>

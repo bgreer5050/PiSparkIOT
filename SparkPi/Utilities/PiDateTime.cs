@@ -34,9 +34,15 @@ namespace SparkPi.Utilities
             System.Net.Http.HttpClient client = new System.Net.Http.HttpClient();
 
            Task<string> getStringTask = client.GetStringAsync(@"http://10.0.200.152:3515/Home/GetDateTime");
-           // Task<string> getStringTask = client.GetStringAsync(@"http://yahoo.com/");
+           //Task<string> getStringTask = client.GetStringAsync(@"http://yahoo.com/");
 
+            
             string urlContents = await getStringTask;
+            long x;
+            if(long.TryParse(urlContents,out x))
+            {
+                StartPage.blnDateReceivedFromServer = true;
+            }
 
             return urlContents;
         }

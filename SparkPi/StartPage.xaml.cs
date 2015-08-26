@@ -67,13 +67,15 @@ namespace SparkPi
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
+         
         //**************************************************************************************
 
         /// <summary>
         /// Flag Variables *********************************************************************
         /// </summary>
         int intShowDateTimeFlag = 1;
-        bool blnDateReceivedFromServer = false;
+        public static bool blnDateReceivedFromServer = false;
+
         //**************************************************************************************
 
         /// <summary>
@@ -221,14 +223,50 @@ namespace SparkPi
 
         private void TimerUpdateUI_Tick(object sender, object e)
         {
-           // txtblockTime.Text = Test;
+            // txtblockTime.Text = Test;
 
-            if(blnDateReceivedFromServer==false)
+            UpdateUI();
+
+            if (blnDateReceivedFromServer)
             {
-               piDateTime = new Utilities.PiDateTime();
+                PiTimeRed.Fill = grayBrush;
+                PiTimeGreen.Fill = greenBrush;
             }
+            else
+            {
+                PiTimeGreen.Fill = grayBrush;
+                PiTimeRed.Fill = redBrush;
+            }
+
         }
 
+        private void UpdateUI()
+        {
+            CheckPiDateTime();
+        }
+
+        private void CheckPiDateTime()
+        {
+            if (blnDateReceivedFromServer == false)
+            {
+
+                try
+                {
+                    piDateTime = new Utilities.PiDateTime();
+                }
+                catch (Exception)
+                {
+
+                    // TODO Log and Notify
+                }
+
+                blnDateReceivedFromServer = false;
+            }
+            else
+            {
+                blnDateReceivedFromServer = true;
+            }
+        }
 
         private void TimerDateTime_Tick(object sender, EventArgs e)
         {
