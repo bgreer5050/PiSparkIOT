@@ -232,6 +232,7 @@ namespace SparkPi
 
             if (cycleLights.RedON) { redLED.Fill = redBrush; } else { redLED.Fill = grayBrush; }
 
+            txtCycleCount.Text = totalNumberOfCycles.ToString();
         }
 
 
@@ -310,7 +311,6 @@ namespace SparkPi
         }
         private static long getMillisecondsSinceLastHeartBeat(DateTime time)
         {
-         
             TimeSpan ts = time - timeOfLastHeartbeat;
             return ts.Ticks / TimeSpan.TicksPerMillisecond;
         }

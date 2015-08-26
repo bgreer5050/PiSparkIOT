@@ -44,15 +44,17 @@
             </StackPanel>
             <!--TRAFFIC LIGHTS END*****************************************************************************-->
 
-            <StackPanel>
-                <TextBlock x:Name="DelayText" Text="500ms" Margin="5" TextAlignment="Center" FontSize="26.667" />
+           
 
-                <TextBlock x:Name="txtblockTime" FontSize="25.667" Foreground="White" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" >
+                <TextBlock FontSize="20" VerticalAlignment="Center">System Start Time:</TextBlock>
+                <TextBlock x:Name="txtSystemStartTime" FontSize="20" VerticalAlignment="Center" TextWrapping="Wrap" Text="TextBlock"/>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="5" >
-                <TextBlock VerticalAlignment="Center">System Start Time:</TextBlock>
-                <TextBlock x:Name="txtSystemStartTime" VerticalAlignment="Center" TextWrapping="Wrap" Text="TextBlock"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center" FontSize="20">Cycle Count:</TextBlock>
+                <TextBlock x:Name="txtCycleCount" FontSize="20"  VerticalAlignment="Center" Text=""></TextBlock>
+                
             </StackPanel>
 
 
@@ -62,7 +64,11 @@
                 <Button x:Name="btnSetMachineStatusDOWN" Margin="5" Click="btnSetMachineStatusDOWN_Click">Down</Button>
             </StackPanel>
             <!--<Button x:Name="btnCycleSimulate" Click="btnCycleSimulate_Click">Cycle</Button>-->
+            <StackPanel>
+                <TextBlock x:Name="DelayText" Text="500ms" Margin="5" TextAlignment="Center" FontSize="20" />
 
+                <TextBlock x:Name="txtblockTime" FontSize="20" Foreground="White" />
+            </StackPanel>
             <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>
         </StackPanel>
     </Grid>
