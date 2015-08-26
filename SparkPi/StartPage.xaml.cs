@@ -83,7 +83,6 @@ namespace SparkPi
         /// <summary>
         /// Flag Variables *********************************************************************
         /// </summary>
-        int intShowDateTimeFlag = 1;
         public static bool blnDateReceivedFromServer = false;
 
         //**************************************************************************************
@@ -131,17 +130,6 @@ namespace SparkPi
             setUpBoardIO();
 
 
-
-   //         if (pin != null)
-   //         {
-   //             timer.Start();
-			//setUpSystem();
-   //         }
-            
-            //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
-           
-
-
             controller = new Controller();
             configuration = new Configuration();
             network = new Network();
@@ -164,42 +152,9 @@ namespace SparkPi
                 outPutCounter += 1;
             }
 
-            if (intShowDateTimeFlag == 1)
-            {
-                txtblockTime.Text = "Universal Time: " + DateTime.Now.ToUniversalTime();
-                intShowDateTimeFlag = 2;
-            }
-
-            else if (intShowDateTimeFlag == 2)
-            {
                 txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
-                intShowDateTimeFlag = 3;
-            }
-
-            else if (intShowDateTimeFlag == 3)
-            {
-                txtblockTime.Text = "Local Time: " + DateTime.Now.ToLocalTime();
-                intShowDateTimeFlag = 1;
-            }
-
-            //if (intShowDateTimeFlag == 1)
-            //{
-            //    txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
-            //    intShowDateTimeFlag = 2;
-            //}
-
-            //else if (intShowDateTimeFlag == 2)
-            //{
-            //    txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
-            //    intShowDateTimeFlag = 3;
-            //}
-
-            //else if (intShowDateTimeFlag == 3)
-            //{
-            //    txtblockTime.Text = "Local Time: " + piDateTime.DateTime.ToLocalTime();
-            //    intShowDateTimeFlag = 1;
-            //}
-
+               
+          
             Debug.WriteLine(inputCounter.ToString());
             Debug.WriteLine(outPutCounter.ToString());
         }
