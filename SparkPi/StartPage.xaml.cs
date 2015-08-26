@@ -64,11 +64,21 @@ namespace SparkPi
         /// </summary>
         private string Test = "";
         private SolidColorBrush redBrush = new SolidColorBrush(Windows.UI.Colors.Red);
-        private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Red);
+        private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Yellow);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
-         
+
         //**************************************************************************************
+
+
+        /// <summary>
+        /// SHARED VARIABLES FOR UI UPDATE **********************************************************************
+        /// </summary>
+        public CycleLights cycleLights;
+
+
+        //**************************************************************************************
+
 
         /// <summary>
         /// Flag Variables *********************************************************************
@@ -129,7 +139,7 @@ namespace SparkPi
    //         }
             
             //txtblockTime.Text = DateTime.Now.Hour.ToString() + ":" + DateTime.Now.Minute.ToString();
-            txtblockTime.Text = DateTime.UtcNow.ToString() + " ---- " + DateTime.Now.ToUniversalTime() + "----" + DateTime.Now.ToLocalTime();
+           
 
 
             controller = new Controller();
@@ -154,13 +164,30 @@ namespace SparkPi
                 outPutCounter += 1;
             }
 
+            if (intShowDateTimeFlag == 1)
+            {
+                txtblockTime.Text = "Universal Time: " + DateTime.Now.ToUniversalTime();
+                intShowDateTimeFlag = 2;
+            }
+
+            else if (intShowDateTimeFlag == 2)
+            {
+                txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
+                intShowDateTimeFlag = 3;
+            }
+
+            else if (intShowDateTimeFlag == 3)
+            {
+                txtblockTime.Text = "Local Time: " + DateTime.Now.ToLocalTime();
+                intShowDateTimeFlag = 1;
+            }
 
             //if (intShowDateTimeFlag == 1)
             //{
             //    txtblockTime.Text = "Universal Time: " + piDateTime.DateTime.ToUniversalTime();
             //    intShowDateTimeFlag = 2;
             //}
-           
+
             //else if (intShowDateTimeFlag == 2)
             //{
             //    txtblockTime.Text = "Time Of Day: " + piDateTime.DateTime.TimeOfDay.ToString();
@@ -175,16 +202,15 @@ namespace SparkPi
 
             Debug.WriteLine(inputCounter.ToString());
             Debug.WriteLine(outPutCounter.ToString());
-
         }
 
         private void setUpSystem()
         {
+            cycleLights = new CycleLights();
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
             currentSystemState = SystemState.DOWN;
-
         }
 
         private void setUpBoardIO()
@@ -200,7 +226,6 @@ namespace SparkPi
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
             OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
 
-
         }
 
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
@@ -210,6 +235,16 @@ namespace SparkPi
             {
                 inputCounter += 1;
                 totalNumberOfCycles += 1;
+                cycleLights.GreenOn = true;
+                cycleLights.YellowON = false;
+                cycleLights.RedON = false;
+            }
+            else
+            {
+
+                cycleLights.GreenOn = false;
+                cycleLights.YellowON = true;
+                cycleLights.RedON = false;
             }
 
             Debug.WriteLine(sender.Read().ToString());
@@ -221,47 +256,29 @@ namespace SparkPi
 
             UpdateUI();
 
-            if (blnDateReceivedFromServer)
-            {
-                PiTimeRed.Fill = grayBrush;
-                PiTimeGreen.Fill = greenBrush;
-            }
-            else
-            {
-                PiTimeGreen.Fill = grayBrush;
-                PiTimeRed.Fill = redBrush;
-            }
+            //if (blnDateReceivedFromServer)
+            //{
+            //    PiTimeRed.Fill = grayBrush;
+            //    PiTimeGreen.Fill = greenBrush;
+            //}
+            //else
+            //{
+            //    PiTimeGreen.Fill = grayBrush;
+            //    PiTimeRed.Fill = redBrush;
+            //}
 
         }
 
         private void UpdateUI()
         {
-           
+            if (cycleLights.GreenOn) { greenLED.Fill = greenBrush; } else { greenLED.Fill = grayBrush; }
+
+            if (cycleLights.YellowON) { yellowLED.Fill = yellowBrush; } else { yellowLED.Fill = grayBrush; }
+
+            if (cycleLights.RedON) { redLED.Fill = redBrush; } else { redLED.Fill = grayBrush; }
+
         }
 
-       
-
-        private void TimerDateTime_Tick(object sender, EventArgs e)
-        {
-            if (intShowDateTimeFlag == 1)
-            {
-                txtblockTime.Text = "Universal Time: " + DateTime.Now.ToUniversalTime();
-                intShowDateTimeFlag = 2;
-            }
-           
-            else if (intShowDateTimeFlag == 2)
-            {
-                txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
-                intShowDateTimeFlag = 3;
-            }
-
-            else if (intShowDateTimeFlag == 3)
-            {
-                txtblockTime.Text = "Local Time: " + DateTime.Now.ToLocalTime();
-                intShowDateTimeFlag = 1;
-            }
-           
-        }
 
         //private void InitGPIO()
         //{
