@@ -78,22 +78,22 @@ namespace SparkPi
         }
         private void ProcessOutboundEvent(object o)
         {
-            //Debug.Print("Check For Outbound");
+            ////Debug.Print("Check For Outbound");
 
-            if (outboundQueue.Count == 0)
-            {
-                //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
+            //if (outboundQueue.Count == 0)
+            //{
+            //    //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
 
-                readDataFromFileAsync();
-            }
-            else
-            {
-                if (DataReadyForPickUp != null)
-                {
-                    Debug.WriteLine("Firing DataReadyForPickUp");
-                    DataReadyForPickUp(this, new EventArgs());
-                }
-            }
+            //    readDataFromFileAsync();
+            //}
+            //else
+            //{
+            //    if (DataReadyForPickUp != null)
+            //    {
+            //        Debug.WriteLine("Firing DataReadyForPickUp");
+            //        DataReadyForPickUp(this, new EventArgs());
+            //    }
+            //}
         }
 
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
