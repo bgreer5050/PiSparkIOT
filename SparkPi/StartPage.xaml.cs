@@ -193,10 +193,11 @@ namespace SparkPi
             if (sender.Read() == GpioPinValue.High)
             {
                 inputCounter += 1;
-                totalNumberOfCycles += 1;
                 cycleLights.GreenOn = true;
                 cycleLights.YellowON = false;
                 cycleLights.RedON = false;
+                handleHeartBeat(DateTime.Now, controller, configuration);
+
             }
             else
             {
@@ -321,7 +322,7 @@ namespace SparkPi
 
 
 
-        private static void handleHeartBeat(DateTime time)
+        private static void handleHeartBeat(DateTime time,Controller controller,Configuration config)     
         {
 
 
@@ -336,10 +337,9 @@ namespace SparkPi
             double totalMillisecondsSinceLastCycle = ts.Ticks / 10000.0;
 
             if (currentSystemState == SystemState.DOWN &&
-            numberOfHeartBeatsSinceLastStateChange > controller.HeartbeatsRequiredToChangeState &&
-            totalMillisecondsSinceLastCycle < (controller.CycleLengthMs * 1.5))
+            numberOfHeartBeatsSinceLastStateChange >  config.HeartbeatsRequiredToChangeState &&
+            totalMillisecondsSinceLastCycle < (config.CycleLengthMs * 1.5))
             {
-                Debug.Print("Changing State to Run");
                 setSystemSateToRun(time);
             }
 
