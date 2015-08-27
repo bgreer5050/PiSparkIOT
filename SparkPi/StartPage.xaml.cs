@@ -188,8 +188,8 @@ namespace SparkPi
         {
             Debug.WriteLine("QUEUE SIZE:" + sparkQueue.Count.ToString());
             
-            var currTime = DateTime.UtcNow;
-            Debug.WriteLine(DateTime.UtcNow.ToString());
+            var currTime = DateTime.Now;
+            Debug.WriteLine(DateTime.Now.ToString());
 
             //Debug.Print("Checking if Machine State = Running");
             //Debug.Print("System State: " + currentSystemState.ToString()); 

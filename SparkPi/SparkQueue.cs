@@ -19,10 +19,7 @@ namespace SparkPi
         public int QueueCycleMilliSeconds { get; set; }
         public string SubDirectoryPath { get; set; }
         public string DataFileName { get; set; }
-        public string FullFilePath
-        {
-            get { return SubDirectoryPath + "\\" + DataFileName; }
-        }
+      
         private Queue inboundQueue;
         private Queue outboundQueue;
         private Timer InboundDataTimer;
@@ -57,7 +54,7 @@ namespace SparkPi
             //}
 
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 1250, 1250);
-            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 1250, 1250);
+            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEventAsync), new Object(), 1250, 1250);
         }
       
         private async void ProcessInboundEventAsync(object o)
@@ -76,24 +73,25 @@ namespace SparkPi
                 _syncLock.Release();
             }
         }
-        private void ProcessOutboundEvent(object o)
+        private async void ProcessOutboundEventAsync(object o)
         {
-            ////Debug.Print("Check For Outbound");
+            Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
-            //if (outboundQueue.Count == 0)
-            //{
-            //    //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
-
-            //    readDataFromFileAsync();
-            //}
-            //else
-            //{
-            //    if (DataReadyForPickUp != null)
-            //    {
-            //        Debug.WriteLine("Firing DataReadyForPickUp");
-            //        DataReadyForPickUp(this, new EventArgs());
-            //    }
-            //}
+            if (outboundQueue.Count == 0)
+            {
+                //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
+                await _syncLock.WaitAsync();
+                readDataFromFileAsync();
+                _syncLock.Release();
+            }
+            else
+            {
+                if (DataReadyForPickUp != null)
+                {
+                    Debug.WriteLine("Firing DataReadyForPickUp");
+                    DataReadyForPickUp(this, new EventArgs());
+                }
+            }
         }
 
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
@@ -125,11 +123,7 @@ namespace SparkPi
         }
         private async void readDataFromFileAsync()
         {
-            if (File.Exists(FullFilePath))
-            {
-                var line = "";
-                
-
+            var line = "";
                     try
                     {
                     StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -153,7 +147,7 @@ namespace SparkPi
                         DataReadyForPickUp(this, new EventArgs());
                     }
                 }
-            }
+            
         }
         private async Task<bool> removeDataFromFileAsync(string lineToRemove)
         {
