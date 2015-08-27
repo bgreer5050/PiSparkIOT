@@ -21,6 +21,7 @@ namespace SparkPi
         public Network network;
         public Configuration configuration;
         public Controller controller;
+        public ViewModel viewModel;
         //***************************************************************************************************
 
 
@@ -67,6 +68,7 @@ namespace SparkPi
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Yellow);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
+        
 
         //**************************************************************************************
 
@@ -161,6 +163,8 @@ namespace SparkPi
 
         private void setUpSystem()
         {
+            viewModel = new ViewModel();
+
             cycleLights = new CycleLights();
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
@@ -314,6 +318,35 @@ namespace SparkPi
             TimeSpan ts = time - timeOfLastHeartbeat;
             return ts.Ticks / TimeSpan.TicksPerMillisecond;
         }
+
+
+
+        private static void handleHeartBeat(DateTime time)
+        {
+
+
+            totalRuntimeMilliseconds += getMillisecondsSinceLastHeartBeat(time);
+            totalNumberOfCycles++;
+            numberOfHeartBeatsSinceLastStateChange++;
+
+
+
+            TimeSpan ts = time - timeOfLastHeartbeat;
+
+            double totalMillisecondsSinceLastCycle = ts.Ticks / 10000.0;
+
+            if (currentSystemState == SystemState.DOWN &&
+            numberOfHeartBeatsSinceLastStateChange > controller.HeartbeatsRequiredToChangeState &&
+            totalMillisecondsSinceLastCycle < (controller.CycleLengthMs * 1.5))
+            {
+                Debug.Print("Changing State to Run");
+                setSystemSateToRun(time);
+            }
+
+            timeOfLastHeartbeat = time;
+        }
+
+
 
         public enum SystemState
         {
