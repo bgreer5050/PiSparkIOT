@@ -98,12 +98,13 @@ namespace SparkPi
         int outPutCounter = 0;
         //***************************************************************************************
 
+            // TODO How to use this ?
         System.Threading.SynchronizationContext _uiSyncContext;
-
-        SparkQueue queue = new SparkQueue();
+        
 
         public StartPage()
         {
+           
             InitializeComponent();
 
             SDCardWriterReader SDReader = new SDCardWriterReader();
@@ -125,7 +126,7 @@ namespace SparkPi
 
 
             TimerUpdateUI = new DispatcherTimer();
-            TimerUpdateUI.Interval = TimeSpan.FromMilliseconds(500);
+            TimerUpdateUI.Interval = TimeSpan.FromMilliseconds(300);
             TimerUpdateUI.Tick += TimerUpdateUI_Tick;
             TimerUpdateUI.Start();
 
@@ -185,6 +186,7 @@ namespace SparkPi
 
         private void stateMonitorCheck(object state)
         {
+            Debug.WriteLine("QUEUE SIZE:" + sparkQueue.Count.ToString());
             
             var currTime = DateTime.UtcNow;
             Debug.WriteLine(DateTime.UtcNow.ToString());
@@ -378,6 +380,8 @@ namespace SparkPi
         {
             // TODO Conside doing something with an output here
 
+            Debug.WriteLine("RUN RUN RUN RUN");
+
             currentSystemState = SystemState.RUNNING;
             timeOfLastSystemStateChange = time;
             numberOfHeartBeatsSinceLastStateChange = 0;  
@@ -390,6 +394,9 @@ namespace SparkPi
 
         private static void setSystemStateToDown(DateTime time, Configuration config,SparkQueue sparkQueue)
         {
+
+            Debug.WriteLine("DOWN DOWN DOWN DOWN");
+            
             // TODO Conside doing something with an output here
 
             currentSystemState = SystemState.DOWN;

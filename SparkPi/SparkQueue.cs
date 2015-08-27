@@ -41,7 +41,7 @@ namespace SparkPi
             //GetResults();
             //file = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
 
-            QueueCycleMilliSeconds = 250;
+            QueueCycleMilliSeconds = 500;
 
             initializeClass();
         }
@@ -56,8 +56,8 @@ namespace SparkPi
             //    Program.strPowerOuttageMissedDownEvent = "";
             //}
 
-            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 250, 250);
-            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
+            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 1250, 1250);
+            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 1250, 1250);
         }
       
         private async void ProcessInboundEventAsync(object o)
@@ -65,13 +65,15 @@ namespace SparkPi
             //Debug.Print("Check For Inbound");
             while (inboundQueue.Count > 0)
             {
-                Debug.WriteLine("YES - Inbound Exists");
+                await _syncLock.WaitAsync();
 
+                Debug.WriteLine("YES - Inbound Exists");
                 var line = inboundQueue.Peek().ToString();
                 if (await writeDataToFileAsync(line))
                 {
                     inboundQueue.Dequeue();
                 }
+                _syncLock.Release();
             }
         }
         private void ProcessOutboundEvent(object o)
@@ -93,23 +95,32 @@ namespace SparkPi
                 }
             }
         }
+
+        private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
         private async Task<bool> writeDataToFileAsync(string line)
         {
              bool result = false;
            // var result = new TaskCompletionSource<bool>();
             StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
-            if (File.Exists(FullFilePath))
+            StreamWriter writer;
+            try
             {
-               
-                StreamWriter writer = new StreamWriter(await dbFile.OpenStreamForWriteAsync());
+                await _syncLock.WaitAsync();
+                StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
 
-                   
-                        writer.WriteLine(line);
-                        writer.Flush();
-                        result = true;
-                    
+
+                writer = new StreamWriter(await dbFile.OpenStreamForWriteAsync());
+
+                writer.WriteLine(line);
+                writer.Flush();
+                result = true;
             }
+            catch(Exception ex)
+            {
+                
+                result = false;
+            }
+            _syncLock.Release();
             return result;
         }
         private async void readDataFromFileAsync()
