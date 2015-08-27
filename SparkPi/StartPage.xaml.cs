@@ -59,6 +59,7 @@ namespace SparkPi
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
         private DispatcherTimer TimerUpdateUI;
+        private static System.Threading.Timer systemStateMonitor;
         //************************************************************************************
 
         /// <summary>
@@ -361,6 +362,24 @@ namespace SparkPi
             sparkQueue.Enqueue(@"assetID=" + config.AssetNumber + "&state=" + evt.state + "&ticks=" + evt.ticks.ToString());
 
             //+ "&blnNetworkUp=" + network.NetworkUp.ToString() + "&blntimeupdated=" + Program.time.TimeUpdated.ToString());
+        }
+
+
+        private static void setSystemStateToDown(DateTime time, Configuration config,SparkQueue sparkQueue)
+        {
+            // TODO Conside doing something with an output here
+
+            currentSystemState = SystemState.DOWN;
+            timeOfLastSystemStateChange = time;
+            numberOfHeartBeatsSinceLastStateChange = 0;
+           
+            MachineEvent evt = new MachineEvent { AssetID = config.AssetNumber, state = "DOWN", ticks = DateTime.Now.Ticks.ToString() };
+            //sparkQueue.Enqueue(@"assetID=" + config.AssetNumber + "&state=" + evt.state + "&ticks=" + evt.ticks.ToString() + "&blnNetworkUp=" + network.NetworkUp.ToString() + "&blntimeupdated=" + Program.time.TimeUpdated.ToString());
+
+            sparkQueue.Enqueue(@"assetID=" + config.AssetNumber + "&state=" + evt.state + "&ticks=" + evt.ticks.ToString());
+
+            //Thread threadRecordStateInMachineStateLog = new Thread(new ThreadStart(UpdateMachineStateOnSDCard));
+            //threadRecordStateInMachineStateLog.Start();
         }
 
 
