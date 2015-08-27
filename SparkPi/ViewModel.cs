@@ -14,10 +14,10 @@ namespace SparkPi
         public ViewModel()
         {
             this.CycleLights = new CycleLights();
-            this.CycleCount = 0;
+            this.TotalNumberOfCycles = 0;
             this.TicksSinceLastCycle = 0;
             this.NumberOfHeartBeatsSinceLastStateChange = 0;
-            this.TotalRunTime = 0;
+            this.TotalRunTimeMilliSeconds = 0;
             
         }
 

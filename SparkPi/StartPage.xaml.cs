@@ -22,6 +22,7 @@ namespace SparkPi
         public Configuration configuration;
         public Controller controller;
         public ViewModel viewModel;
+        public SparkQueue sparkQueue;
         //***************************************************************************************************
 
 
@@ -135,9 +136,16 @@ namespace SparkPi
             controller = new Controller();
             configuration = new Configuration();
             network = new Network();
+            sparkQueue = new SparkQueue();
+            sparkQueue.DataReadyForPickUp += SparkQueue_DataReadyForPickUp;
 
 
             //Utilities.SparkEmail.Send("TEST FROM PI");
+        }
+
+        private void SparkQueue_DataReadyForPickUp(object sender, EventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         private void TimerDateTime_Tick1(object sender, object e)
@@ -196,12 +204,11 @@ namespace SparkPi
                 cycleLights.GreenOn = true;
                 cycleLights.YellowON = false;
                 cycleLights.RedON = false;
-                handleHeartBeat(DateTime.Now, controller, configuration);
+                handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
 
             }
             else
             {
-
                 cycleLights.GreenOn = false;
                 cycleLights.YellowON = true;
                 cycleLights.RedON = false;
@@ -322,15 +329,13 @@ namespace SparkPi
 
 
 
-        private static void handleHeartBeat(DateTime time,Controller controller,Configuration config)     
+        private static void handleHeartBeat(DateTime time,Controller controller,Configuration config,SparkQueue sparkQueue)     
         {
-
 
             totalRuntimeMilliseconds += getMillisecondsSinceLastHeartBeat(time);
             totalNumberOfCycles++;
             numberOfHeartBeatsSinceLastStateChange++;
-
-
+            timeOfLastHeartbeat = time;
 
             TimeSpan ts = time - timeOfLastHeartbeat;
 
@@ -340,12 +345,23 @@ namespace SparkPi
             numberOfHeartBeatsSinceLastStateChange >  config.HeartbeatsRequiredToChangeState &&
             totalMillisecondsSinceLastCycle < (config.CycleLengthMs * 1.5))
             {
-                setSystemSateToRun(time);
+                setSystemSateToRun(time,config,sparkQueue);
             }
 
-            timeOfLastHeartbeat = time;
         }
 
+        private static void setSystemSateToRun(DateTime time, Configuration config, SparkQueue sparkQueue)
+        {
+            // TODO Conside doing something with an output here
+
+            currentSystemState = SystemState.RUNNING;
+            timeOfLastSystemStateChange = time;
+            numberOfHeartBeatsSinceLastStateChange = 0;  
+            MachineEvent evt = new MachineEvent { AssetID =  config.AssetNumber, state = "RUNNING", ticks = DateTime.Now.Ticks.ToString() };
+            sparkQueue.Enqueue(@"assetID=" + config.AssetNumber + "&state=" + evt.state + "&ticks=" + evt.ticks.ToString());
+
+            //+ "&blnNetworkUp=" + network.NetworkUp.ToString() + "&blntimeupdated=" + Program.time.TimeUpdated.ToString());
+        }
 
 
         public enum SystemState
