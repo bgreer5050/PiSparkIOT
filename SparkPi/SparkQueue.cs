@@ -59,10 +59,11 @@ namespace SparkPi
       
         private async void ProcessInboundEventAsync(object o)
         {
-            //Debug.Print("Check For Inbound");
+            await _syncLock.WaitAsync();
+
+            Debug.WriteLine("Check For Inbound");
             while (inboundQueue.Count > 0)
             {
-                await _syncLock.WaitAsync();
 
                 Debug.WriteLine("YES - Inbound Exists");
                 var line = inboundQueue.Peek().ToString();
@@ -70,19 +71,20 @@ namespace SparkPi
                 {
                     inboundQueue.Dequeue();
                 }
-                _syncLock.Release();
             }
+            _syncLock.Release();
+
         }
         private async void ProcessOutboundEventAsync(object o)
         {
+            await _syncLock.WaitAsync();
+
             Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
             if (outboundQueue.Count == 0)
             {
                 //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
-                await _syncLock.WaitAsync();
                 readDataFromFileAsync();
-                _syncLock.Release();
             }
             else
             {
@@ -92,11 +94,14 @@ namespace SparkPi
                     DataReadyForPickUp(this, new EventArgs());
                 }
             }
+            _syncLock.Release();
+
         }
 
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
         private async Task<bool> writeDataToFileAsync(string line)
         {
+            await _syncLock.WaitAsync();
              bool result = false;
            // var result = new TaskCompletionSource<bool>();
             StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -119,10 +124,13 @@ namespace SparkPi
                 result = false;
             }
             _syncLock.Release();
+
+            _syncLock.Release();
             return result;
         }
         private async void readDataFromFileAsync()
         {
+           await _syncLock.WaitAsync();
             var line = "";
                     try
                     {
@@ -147,13 +155,13 @@ namespace SparkPi
                         DataReadyForPickUp(this, new EventArgs());
                     }
                 }
-            
+            _syncLock.Release();
         }
         private async Task<bool> removeDataFromFileAsync(string lineToRemove)
         {
+            await _syncLock.WaitAsync();
             bool result = false;
-            if (File.Exists(FullFilePath))
-            {
+           
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
                 var lines = new ArrayList();
@@ -181,7 +189,7 @@ namespace SparkPi
                         }
                         result = true;
                     }
-            }
+            _syncLock.Release();
             return result;
         }
         public void Enqueue(string textToAdd)
@@ -225,8 +233,7 @@ namespace SparkPi
         {
             await Task.Delay(100);
             int records = 0;
-            if (File.Exists(FullFilePath))
-            {
+            
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
                 StreamReader reader = new StreamReader(await file.OpenStreamForReadAsync());
@@ -237,7 +244,6 @@ namespace SparkPi
                     records++;
                 }
 
-            }
             return records;
         }
     }

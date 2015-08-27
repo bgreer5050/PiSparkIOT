@@ -61,11 +61,14 @@ namespace SparkPiMockUI
 
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 250, 250);
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
+            
+            
         }
 
-        private async void ProcessInboundEventAsync(object o)
+        private  void ProcessInboundEventAsync(object o)
         {
-            //Debug.Print("Check For Inbound");
+            
+            Debug.Print("Check For Inbound");
             while (inboundQueue.Count > 0)
             {
                 Debug.Print("YES - Inbound Exists");
