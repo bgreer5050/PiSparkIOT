@@ -173,12 +173,35 @@ namespace SparkPi
         private void setUpSystem()
         {
             viewModel = new ViewModel();
-
+            
             cycleLights = new CycleLights();
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
             currentSystemState = SystemState.DOWN;
+
+            systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 1000, 1000);
+        }
+
+        private void stateMonitorCheck(object state)
+        {
+            
+            var currTime = DateTime.UtcNow;
+            Debug.WriteLine(DateTime.UtcNow.ToString());
+
+            //Debug.Print("Checking if Machine State = Running");
+            //Debug.Print("System State: " + currentSystemState.ToString()); 
+
+            if (currentSystemState == SystemState.RUNNING)
+            {
+               
+                var timeSinceLastHeartbeat = getMillisecondsSinceLastHeartBeat(currTime);
+                if ((configuration.CycleLengthMs * configuration.GracePeriodMultiple) < timeSinceLastHeartbeat)
+                {
+                    //Debug.Print("Change State to Down");
+                    setSystemStateToDown(currTime,configuration,sparkQueue);
+                }
+            }
         }
 
         private void setUpBoardIO()
