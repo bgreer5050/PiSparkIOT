@@ -53,13 +53,13 @@ namespace SparkPi
             //    Program.strPowerOuttageMissedDownEvent = "";
             //}
 
-            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEventAsync), new Object(), 1250, 1250);
-            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEventAsync), new Object(), 1250, 1250);
+            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 1250, 1250);
+            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 1250, 1250);
         }
       
-        private async void ProcessInboundEventAsync(object o)
+        private async void ProcessInboundEvent(object o)
         {
-         //   await _syncLock.WaitAsync();
+            _syncLock.Wait();
 
             Debug.WriteLine("Check For Inbound");
             while (inboundQueue.Count > 0)
@@ -72,12 +72,12 @@ namespace SparkPi
                     inboundQueue.Dequeue();
                 }
             }
-           // _syncLock.Release();
+            _syncLock.Release();
 
         }
-        private async void ProcessOutboundEventAsync(object o)
+        private void ProcessOutboundEvent(object o)
         {
-            await _syncLock.WaitAsync();
+            _syncLock.Wait();
 
             Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
