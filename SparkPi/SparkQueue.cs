@@ -59,7 +59,7 @@ namespace SparkPi
       
         private async void ProcessInboundEventAsync(object o)
         {
-            await _syncLock.WaitAsync();
+         //   await _syncLock.WaitAsync();
 
             Debug.WriteLine("Check For Inbound");
             while (inboundQueue.Count > 0)
@@ -72,7 +72,7 @@ namespace SparkPi
                     inboundQueue.Dequeue();
                 }
             }
-            _syncLock.Release();
+           // _syncLock.Release();
 
         }
         private async void ProcessOutboundEventAsync(object o)
