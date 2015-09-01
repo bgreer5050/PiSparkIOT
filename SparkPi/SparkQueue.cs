@@ -57,34 +57,30 @@ namespace SparkPi
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 1250, 1250);
         }
       
-        private async void ProcessInboundEvent(object o)
+        private void ProcessInboundEvent(object o)
         {
-            _syncLock.Wait();
-
             Debug.WriteLine("Check For Inbound");
             while (inboundQueue.Count > 0)
             {
-
                 Debug.WriteLine("YES - Inbound Exists");
                 var line = inboundQueue.Peek().ToString();
-                if (await writeDataToFileAsync(line))
+                bool success = writeDataToFileAsync(line);
+               
+                if(success==true)
                 {
                     inboundQueue.Dequeue();
                 }
             }
-            _syncLock.Release();
-
         }
         private void ProcessOutboundEvent(object o)
         {
-            _syncLock.Wait();
 
             Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
             if (outboundQueue.Count == 0)
             {
                 //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
-                readDataFromFileAsync();
+                readDataFromFile();
             }
             else
             {
@@ -99,21 +95,21 @@ namespace SparkPi
         }
 
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        private async Task<bool> writeDataToFileAsync(string line)
+        private bool writeDataToFileAsync(string line)
         {
-            await _syncLock.WaitAsync();
              bool result = false;
            // var result = new TaskCompletionSource<bool>();
             StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
             StreamWriter writer;
             try
             {
-                await _syncLock.WaitAsync();
-                StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
+                var createFileTask = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
+                StorageFile dbFile = createFileTask.GetResults();
 
-
-                writer = new StreamWriter(await dbFile.OpenStreamForWriteAsync());
-
+                var taskGetStreamWriter = dbFile.OpenStreamForWriteAsync();
+                
+                writer = new StreamWriter(taskGetStreamWriter.Result);
+                taskGetStreamWriter.Wait();
                 writer.WriteLine(line);
                 writer.Flush();
                 result = true;
@@ -123,29 +119,32 @@ namespace SparkPi
                 
                 result = false;
             }
-            _syncLock.Release();
 
-            _syncLock.Release();
             return result;
         }
-        private async void readDataFromFileAsync()
+        private void readDataFromFile()
         {
-           await _syncLock.WaitAsync();
             var line = "";
-                    try
-                    {
-                    StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                    StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
-                        using (StreamReader reader = new StreamReader(await file.OpenStreamForReadAsync()))
-                        {
-                            line = reader.ReadLine();
-                            reader.Dispose();
-                        }
-                    }
-                    catch (System.IO.IOException ex)
-                    {
-                    throw;
-                    }
+            try
+            {
+                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+
+
+                var task = folder.GetFileAsync("SparkQueueDB.txt");
+                StorageFile file = task.GetResults();
+
+                //Create Stream and Dispose
+
+                var GetReader = file.OpenStreamForReadAsync(); // Create a task called GetReader
+                StreamReader reader = new StreamReader(GetReader.Result); //The StreamReader ctor takes a stream in its constructor
+
+                line = reader.ReadLine();
+                reader.Dispose();
+            }
+            catch (System.IO.IOException ex)
+            {
+
+            }
                 if (line != null)
                 {
                     Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
@@ -155,7 +154,6 @@ namespace SparkPi
                         DataReadyForPickUp(this, new EventArgs());
                     }
                 }
-            _syncLock.Release();
         }
         private async Task<bool> removeDataFromFileAsync(string lineToRemove)
         {
