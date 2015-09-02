@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft. All rights reserved.
 
+using Nito.AsyncEx;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -106,6 +107,12 @@ namespace SparkPi
         {
            
             InitializeComponent();
+            SetUpMisc();
+
+            //while(true)
+            //{
+
+            //}
 
             SDCardWriterReader SDReader = new SDCardWriterReader();
             SDReader.WriteToSDCardAsync();
@@ -124,16 +131,13 @@ namespace SparkPi
             timerDateTime.Tick += TimerDateTime_Tick1;
             timerDateTime.Start();
 
-
             TimerUpdateUI = new DispatcherTimer();
             TimerUpdateUI.Interval = TimeSpan.FromMilliseconds(300);
             TimerUpdateUI.Tick += TimerUpdateUI_Tick;
             TimerUpdateUI.Start();
 
-
             setUpSystem();
             setUpBoardIO();
-
 
             controller = new Controller();
             configuration = new Configuration();
@@ -145,9 +149,15 @@ namespace SparkPi
             //Utilities.SparkEmail.Send("TEST FROM PI");
         }
 
+        private async void SetUpMisc()
+        {
+            sparkQueue = new SparkQueue();
+            sparkQueue.itializeClass().Wait();
+        }
+
         private void SparkQueue_DataReadyForPickUp(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            Debug.WriteLine("DATA READY FOR PICKUP NOT IMPLEMENTED");
         }
 
         private void TimerDateTime_Tick1(object sender, object e)
@@ -186,7 +196,7 @@ namespace SparkPi
 
         private void stateMonitorCheck(object state)
         {
-            Debug.WriteLine("QUEUE SIZE:" + sparkQueue.Count.ToString());
+            //Debug.WriteLine("QUEUE SIZE:" + sparkQueue.Count.ToString());
             
             var currTime = DateTime.Now;
             Debug.WriteLine(DateTime.Now.ToString());

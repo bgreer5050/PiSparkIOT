@@ -32,6 +32,5 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClient" />
-    <uap:Capability Name="removableStorage" />
   </Capabilities>
 </Package>

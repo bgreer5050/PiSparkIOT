@@ -27,23 +27,33 @@ namespace SparkPi
         private Object FILELOCK = new Object();
         public StorageFolder folder;
         public StorageFile file;
-   
+        private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
+
         public SparkQueue()
         {
-            //SubDirectoryPath = subDirectory;
-            //DataFileName = fileName;
+           
 
-            this.folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            this.file = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).AsTask().Result;
-            //GetResults();
-            //file = folder.GetFileAsync("SparkQueueDB.txt").GetResults();
+           
 
-            QueueCycleMilliSeconds = 500;
-
-            initializeClass();
+            //initializeClass();
         }
-        private void initializeClass()
+        public async Task itializeClass()
         {
+            QueueCycleMilliSeconds = 500;
+            this.folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+           
+            try
+            {
+
+                this.file = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).AsTask().Result;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+
             inboundQueue = new Queue();
             outboundQueue = new Queue();
 
@@ -53,49 +63,53 @@ namespace SparkPi
             //    Program.strPowerOuttageMissedDownEvent = "";
             //}
 
-            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 1250, 1250);
-            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 1250, 1250);
+            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
+            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
         }
       
-        private void ProcessInboundEvent(object o)
+        private async void ProcessInboundEvent(object o)
         {
-            Debug.WriteLine("Check For Inbound");
-            while (inboundQueue.Count > 0)
-            {
-                Debug.WriteLine("YES - Inbound Exists");
-                var line = inboundQueue.Peek().ToString();
-                bool success = writeDataToFileAsync(line);
+            _syncLock.Wait();
                
-                if(success==true)
+                Debug.WriteLine("Check For Inbound");
+                while (inboundQueue.Count > 0)
                 {
-                    inboundQueue.Dequeue();
+                    Debug.WriteLine("YES - Inbound Exists");
+                    var line = inboundQueue.Peek().ToString();
+
+                bool success = writeDataToFileAsync(line).Result;
+                    
+
+                    if (success == true)
+                    {
+                        inboundQueue.Dequeue();
+                    }
                 }
-            }
+            _syncLock.Release();
         }
         private void ProcessOutboundEvent(object o)
         {
-
-            Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
-
-            if (outboundQueue.Count == 0)
+            lock(FILELOCK)
             {
-                //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
-                readDataFromFile();
-            }
-            else
-            {
-                if (DataReadyForPickUp != null)
+                Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
+
+                if (outboundQueue.Count == 0)
                 {
-                    Debug.WriteLine("Firing DataReadyForPickUp");
-                    DataReadyForPickUp(this, new EventArgs());
+                    //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
+                    readDataFromFile();
+                }
+                else
+                {
+                    if (DataReadyForPickUp != null)
+                    {
+                        Debug.WriteLine("Firing DataReadyForPickUp");
+                        DataReadyForPickUp(this, new EventArgs());
+                    }
                 }
             }
-            _syncLock.Release();
-
         }
 
-        private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
-        private bool writeDataToFileAsync(string line)
+        private async Task<bool> writeDataToFileAsync(string line)
         {
              bool result = false;
            // var result = new TaskCompletionSource<bool>();
@@ -122,20 +136,18 @@ namespace SparkPi
 
             return result;
         }
-        private void readDataFromFile()
+        private async void readDataFromFile()
         {
             var line = "";
             try
             {
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-
-
-                var task = folder.GetFileAsync("SparkQueueDB.txt");
-                StorageFile file = task.GetResults();
+                StorageFile file; // = await folder.GetFileAsync("SparkQueueDB.txt");
 
                 //Create Stream and Dispose
-
-                var GetReader = file.OpenStreamForReadAsync(); // Create a task called GetReader
+                StorageFile _file = await folder.GetFileAsync("SparkQueueDB.txt");
+             
+                var GetReader = _file.OpenStreamForReadAsync(); // Create a task called GetReader
                 StreamReader reader = new StreamReader(GetReader.Result); //The StreamReader ctor takes a stream in its constructor
 
                 line = reader.ReadLine();
@@ -192,9 +204,19 @@ namespace SparkPi
         }
         public void Enqueue(string textToAdd)
         {
-            if (!inboundQueue.Contains(textToAdd) && textToAdd != null)
+            if (inboundQueue != null)
             {
-                inboundQueue.Enqueue(textToAdd);
+                if (!inboundQueue.Contains(textToAdd) && textToAdd != null)
+                {
+                    inboundQueue.Enqueue(textToAdd);
+                }
+            }
+            else
+            {
+                Debug.WriteLine("***********************************************");
+                Debug.WriteLine("***********************************************");
+                Debug.WriteLine("***********************************************");
+
             }
         }
         public bool Dequeue()
