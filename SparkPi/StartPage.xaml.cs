@@ -115,8 +115,6 @@ namespace SparkPi
 
             //}
 
-            SDCardWriterReader SDReader = new SDCardWriterReader();
-            SDReader.WriteToSDCardAsync();
 
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
