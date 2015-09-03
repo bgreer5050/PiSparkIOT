@@ -37,13 +37,8 @@ namespace SparkPi
         {
             this.vm = vm;
             //initializeClass();
-
-            var dispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
-            dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
+           
                 vm.Errors.Add("SparkQueue Created");
-            });
-
         }
         public async Task itializeClass()
         {
@@ -58,8 +53,9 @@ namespace SparkPi
             }
             catch (Exception ex)
             {
-
-                throw;
+                vm.Errors.Add("Queue Failed To Initialize");
+                vm.Errors.Add(ex.Message.ToString());
+                
             }
 
             inboundQueue = new Queue();

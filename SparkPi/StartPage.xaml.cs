@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
+using Windows.UI;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -283,12 +284,14 @@ namespace SparkPi
             txtCycleCount.Text = totalNumberOfCycles.ToString();
 
             listViewErrors.Items.Clear();
-            
 
             foreach (string s in this.viewModel.Errors)
             {
                 listViewErrors.Items.Add(s);
             }
+
+            listViewErrors.Background = redBrush;
+            listViewErrors.Foreground = greenBrush;
         }
 
 
