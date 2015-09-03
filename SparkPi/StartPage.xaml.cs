@@ -142,7 +142,7 @@ namespace SparkPi
             controller = new Controller();
             configuration = new Configuration();
             network = new Network();
-            sparkQueue = new SparkQueue();
+            //sparkQueue = new SparkQueue();
             sparkQueue.DataReadyForPickUp += SparkQueue_DataReadyForPickUp;
 
 
@@ -215,6 +215,7 @@ namespace SparkPi
                 }
             }
         }
+
 
         private void setUpBoardIO()
         {

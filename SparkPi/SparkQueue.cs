@@ -64,33 +64,53 @@ namespace SparkPi
             //}
 
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
-            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
+            //   OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
+
+            this.file = null;
+            this.folder = null;
         }
       
         private async void ProcessInboundEvent(object o)
         {
             _syncLock.Wait();
-               
+
+            try
+            {
                 Debug.WriteLine("Check For Inbound");
                 while (inboundQueue.Count > 0)
                 {
                     Debug.WriteLine("YES - Inbound Exists");
                     var line = inboundQueue.Peek().ToString();
+                    bool success;
+                    try
+                    {
+                        success = writeDataToFileAsync(line).Result;
+                    }
+                    catch (Exception exc)
+                    {
 
-                bool success = writeDataToFileAsync(line).Result;
-                    
+                        throw;
+                    }
+
 
                     if (success == true)
                     {
                         inboundQueue.Dequeue();
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
             _syncLock.Release();
         }
         private void ProcessOutboundEvent(object o)
         {
             lock(FILELOCK)
             {
+                Debug.WriteLine("Check For Inbound");
                 Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
                 if (outboundQueue.Count == 0)
@@ -117,15 +137,32 @@ namespace SparkPi
             StreamWriter writer;
             try
             {
-                var createFileTask = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
-                StorageFile dbFile = createFileTask.GetResults();
+                StorageFile dbFile = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).AsTask().Result;
+                Stream taskGetStreamWriter;
+                try
+                {
+                    FileIO.AppendTextAsync(dbFile, line + Environment.NewLine).AsTask().RunSynchronously();
+                     taskGetStreamWriter = dbFile.OpenStreamForWriteAsync().Result;
+                }
+                catch (Exception _exc1)
+                {
 
-                var taskGetStreamWriter = dbFile.OpenStreamForWriteAsync();
+                    throw;
+                }
                 
-                writer = new StreamWriter(taskGetStreamWriter.Result);
-                taskGetStreamWriter.Wait();
-                writer.WriteLine(line);
+                writer = new StreamWriter(taskGetStreamWriter);
+                //  taskGetStreamWriter.Wait();
+                try
+                {
+                    writer. WriteLine(line,
+                }
+                catch (Exception _exc)
+                {
+
+                    throw;
+                }
                 writer.Flush();
+                writer.Dispose();
                 result = true;
             }
             catch(Exception ex)
@@ -147,8 +184,8 @@ namespace SparkPi
                 //Create Stream and Dispose
                 StorageFile _file = await folder.GetFileAsync("SparkQueueDB.txt");
              
-                var GetReader = _file.OpenStreamForReadAsync(); // Create a task called GetReader
-                StreamReader reader = new StreamReader(GetReader.Result); //The StreamReader ctor takes a stream in its constructor
+                var GetReader = _file.OpenStreamForReadAsync().Result; // Create a task called GetReader
+                StreamReader reader = new StreamReader(GetReader); //The StreamReader ctor takes a stream in its constructor
 
                 line = reader.ReadLine();
                 reader.Dispose();
