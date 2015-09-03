@@ -18,6 +18,8 @@ namespace SparkPi
             this.TicksSinceLastCycle = 0;
             this.NumberOfHeartBeatsSinceLastStateChange = 0;
             this.TotalRunTimeMilliSeconds = 0;
+            List<string> errorsList = new List<string>();
+            this.Errors = errorsList;
             
         }
 

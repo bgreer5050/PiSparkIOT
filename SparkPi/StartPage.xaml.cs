@@ -107,8 +107,8 @@ namespace SparkPi
         {
            
             InitializeComponent();
+            viewModel = new ViewModel();
             SetUpMisc();
-
             //while(true)
             //{
 
@@ -151,7 +151,7 @@ namespace SparkPi
 
         private async void SetUpMisc()
         {
-            sparkQueue = new SparkQueue();
+            sparkQueue = new SparkQueue(this.viewModel);
             sparkQueue.itializeClass().Wait();
         }
 
@@ -183,7 +183,6 @@ namespace SparkPi
 
         private void setUpSystem()
         {
-            viewModel = new ViewModel();
             
             cycleLights = new CycleLights();
             //timeOfSystemStartup = DateTime.UtcNow;
@@ -282,6 +281,14 @@ namespace SparkPi
             if (cycleLights.RedON) { redLED.Fill = redBrush; } else { redLED.Fill = grayBrush; }
 
             txtCycleCount.Text = totalNumberOfCycles.ToString();
+
+            listViewErrors.Items.Clear();
+            
+
+            foreach (string s in this.viewModel.Errors)
+            {
+                listViewErrors.Items.Add(s);
+            }
         }
 
 

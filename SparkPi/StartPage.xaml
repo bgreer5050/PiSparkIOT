@@ -70,6 +70,10 @@
                 <TextBlock x:Name="txtblockTime" FontSize="20" Foreground="White" />
             </StackPanel>
             <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>
+            <ListView x:Name="listViewErrors"  Height="150">
+                
+            </ListView>
+
         </StackPanel>
     </Grid>
 </Page>

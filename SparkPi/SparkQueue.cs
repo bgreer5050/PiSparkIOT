@@ -27,15 +27,23 @@ namespace SparkPi
         private Object FILELOCK = new Object();
         public StorageFolder folder;
         public StorageFile file;
+
+        private ViewModel vm;
+
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
+        
 
-        public SparkQueue()
+        public SparkQueue(ViewModel vm)
         {
-           
-
-           
-
+            this.vm = vm;
             //initializeClass();
+
+            var dispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
+            dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                vm.Errors.Add("SparkQueue Created");
+            });
+
         }
         public async Task itializeClass()
         {
@@ -88,8 +96,13 @@ namespace SparkPi
                     }
                     catch (Exception exc)
                     {
-
-                        throw;
+                        var dispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
+                        dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+                        {
+                            vm.Errors.Add(exc.Message.ToString());
+                        });
+                        //      throw;
+                        success = false;
                     }
 
 
