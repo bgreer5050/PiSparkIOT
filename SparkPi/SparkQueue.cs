@@ -134,35 +134,35 @@ namespace SparkPi
              bool result = false;
            // var result = new TaskCompletionSource<bool>();
             StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            StreamWriter writer;
             try
             {
                 StorageFile dbFile = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).AsTask().Result;
-                Stream taskGetStreamWriter;
+                //Stream taskGetStreamWriter;
                 try
                 {
-                    FileIO.AppendTextAsync(dbFile, line + Environment.NewLine).AsTask().RunSynchronously();
-                     taskGetStreamWriter = dbFile.OpenStreamForWriteAsync().Result;
+                    
+                    FileIO.AppendTextAsync(dbFile, line + Environment.NewLine).AsTask().Wait();
+                 //    taskGetStreamWriter = dbFile.OpenStreamForWriteAsync().Result;
                 }
                 catch (Exception _exc1)
                 {
-
+                    result = false;
                     throw;
                 }
                 
-                writer = new StreamWriter(taskGetStreamWriter);
+               // writer = new StreamWriter(taskGetStreamWriter);
                 //  taskGetStreamWriter.Wait();
                 try
                 {
-                    writer. WriteLine(line,
+                    //writer. WriteLine(line,
                 }
                 catch (Exception _exc)
                 {
 
                     throw;
                 }
-                writer.Flush();
-                writer.Dispose();
+               // writer.Flush();
+               // writer.Dispose();
                 result = true;
             }
             catch(Exception ex)
