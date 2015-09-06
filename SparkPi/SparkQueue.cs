@@ -92,13 +92,8 @@ namespace SparkPi
                     }
                     catch (Exception exc)
                     {
-                        var dispatcher = Windows.UI.Core.CoreWindow.GetForCurrentThread().Dispatcher;
-                        dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-                        {
-                            vm.Errors.Add(exc.Message.ToString());
-                        });
-                        //      throw;
-                        success = false;
+                       vm.Errors.Add(exc.Message.ToString());
+                       success = false;
                     }
 
 
@@ -110,16 +105,17 @@ namespace SparkPi
             }
             catch (Exception ex)
             {
-
-                throw;
+                vm.Errors.Add("SparkQueue Exception - L108");
+                vm.Errors.Add(ex.Message.ToString());
             }
             _syncLock.Release();
         }
+
         private void ProcessOutboundEvent(object o)
         {
-            lock(FILELOCK)
-            {
-                Debug.WriteLine("Check For Inbound");
+            _syncLock.Wait();
+
+                Debug.WriteLine("Check For Outbound");
                 Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
                 if (outboundQueue.Count == 0)
@@ -135,7 +131,7 @@ namespace SparkPi
                         DataReadyForPickUp(this, new EventArgs());
                     }
                 }
-            }
+            _syncLock.Release();
         }
 
         private async Task<bool> writeDataToFileAsync(string line)
@@ -188,20 +184,15 @@ namespace SparkPi
             try
             {
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                StorageFile file; // = await folder.GetFileAsync("SparkQueueDB.txt");
+                StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
 
-                //Create Stream and Dispose
-                StorageFile _file = await folder.GetFileAsync("SparkQueueDB.txt");
+                line = FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
              
-                var GetReader = _file.OpenStreamForReadAsync().Result; // Create a task called GetReader
-                StreamReader reader = new StreamReader(GetReader); //The StreamReader ctor takes a stream in its constructor
-
-                line = reader.ReadLine();
-                reader.Dispose();
             }
-            catch (System.IO.IOException ex)
+            catch (Exception ex)
             {
-
+                vm.Errors.Add("ReadDataFromFile Error");
+                vm.Errors.Add(ex.Message.ToString());
             }
                 if (line != null)
                 {
