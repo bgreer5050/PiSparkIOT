@@ -4,6 +4,8 @@ using Nito.AsyncEx;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using Windows.Devices.Gpio;
 using Windows.UI;
@@ -154,9 +156,69 @@ namespace SparkPi
             sparkQueue.itializeClass().Wait();
         }
 
-        private void SparkQueue_DataReadyForPickUp(object sender, EventArgs e)
+
+
+        private System.Threading.SemaphoreSlim _semaphore = new System.Threading.SemaphoreSlim(1);
+        private async void SparkQueue_DataReadyForPickUp(object sender, EventArgs e)
         {
+            _semaphore.Wait();
+            bool postSucceed = await ProcessOutboundQueue();
             Debug.WriteLine("DATA READY FOR PICKUP NOT IMPLEMENTED");
+            if(postSucceed)
+            {
+                sparkQueue.Dequeue();
+            }
+            _semaphore.Release();
+        }
+
+        //private async Task<bool> ProcessOutboundQueue()
+        //{
+        //    string postData = "";
+        //    bool blnPostSuccessful = false;
+        //    // TODO Decide how many times I should try to post until we cancel ???
+        //    StringBuilder sb = new StringBuilder();
+        //    postData = sparkQueue.Peek();
+        //    Debug.WriteLine("Post Data: " + postData);
+
+        //    HttpClient client = new HttpClient();
+        //    //var body = String.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com", MyCredentials, MyCredentials2);
+        //    var body = String.Format(postData);
+        //    StringContent theContent = new StringContent(body, System.Text.Encoding.UTF8, "application/x-www-form-urlencoded");
+        //    HttpResponseMessage aResponse;
+        //    try
+        //    {
+        //        aResponse = await client.PostAsync(new Uri(@"https://10.0.0.1/"), theContent);
+        //    }
+        //    catch (HttpRequestException ex)
+        //    {
+
+        //        Debug.WriteLine(ex.Message);
+        //        return false;
+        //    }
+
+        //    Debug.WriteLine(aResponse.StatusCode);
+        //    if(aResponse.StatusCode== System.Net.HttpStatusCode.OK)
+        //    {
+        //        sparkQueue.Dequeue();
+        //        return true;
+        //    }
+
+        //    Debug.WriteLine("Post Status Code: " + aResponse.StatusCode.ToString());
+        //    return blnPostSuccessful;
+
+        //}
+
+        private async Task<bool> ProcessOutboundQueue()
+        {
+
+           bool r = await Task.Run(() => {
+
+                return true;
+            });
+
+            return r;
+
+
         }
 
         private void TimerDateTime_Tick1(object sender, object e)

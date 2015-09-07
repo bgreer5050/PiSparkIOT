@@ -68,7 +68,7 @@ namespace SparkPi
             //}
 
             InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
-            //   OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
+            OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
 
             this.file = null;
             this.folder = null;
@@ -88,7 +88,7 @@ namespace SparkPi
                     bool success;
                     try
                     {
-                        success = writeDataToFileAsync(line).Result;
+                        success = await writeDataToFileAsync(line);
                     }
                     catch (Exception exc)
                     {
@@ -141,38 +141,24 @@ namespace SparkPi
             StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
             try
             {
-                StorageFile dbFile = folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists).AsTask().Result;
+                StorageFile dbFile = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.OpenIfExists);
                 //Stream taskGetStreamWriter;
                 try
                 {
-                    
-                    FileIO.AppendTextAsync(dbFile, line + Environment.NewLine).AsTask().Wait();
+
+                    await FileIO.AppendTextAsync(dbFile, line + Environment.NewLine);
                  //    taskGetStreamWriter = dbFile.OpenStreamForWriteAsync().Result;
                 }
                 catch (Exception _exc1)
                 {
                     result = false;
-                    throw;
                 }
-                
-               // writer = new StreamWriter(taskGetStreamWriter);
-                //  taskGetStreamWriter.Wait();
-                try
-                {
-                    //writer. WriteLine(line,
-                }
-                catch (Exception _exc)
-                {
-
-                    throw;
-                }
-               // writer.Flush();
-               // writer.Dispose();
+             
+               
                 result = true;
             }
             catch(Exception ex)
-            {
-                
+            {    
                 result = false;
             }
 
@@ -185,8 +171,8 @@ namespace SparkPi
             {
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
                 StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
-
-                line = FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
+                
+                line =  FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
              
             }
             catch (Exception ex)
@@ -204,9 +190,11 @@ namespace SparkPi
                     }
                 }
         }
+
+        private System.Threading.SemaphoreSlim _removeDataLock = new SemaphoreSlim(1);
         private async Task<bool> removeDataFromFileAsync(string lineToRemove)
         {
-            await _syncLock.WaitAsync();
+            _removeDataLock.Wait();
             bool result = false;
            
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -227,7 +215,6 @@ namespace SparkPi
                             if (l.ToString() != lineToRemove)
                             {
                                 writer.WriteLine(l);
-                                writer.Flush();
                             }
                             else
                             {
@@ -236,7 +223,7 @@ namespace SparkPi
                         }
                         result = true;
                     }
-            _syncLock.Release();
+            _removeDataLock.Release();
             return result;
         }
         public void Enqueue(string textToAdd)
@@ -256,14 +243,15 @@ namespace SparkPi
 
             }
         }
-        public bool Dequeue()
+        public async Task<bool> Dequeue()
         {
             bool blnSuccess = false;
             var line = "";
             if (outboundQueue.Count > 0)
             {
                 line = outboundQueue.Peek().ToString();
-                if (removeDataFromFileAsync(line).Result)
+                bool blnRecordRemovedFromFile = await removeDataFromFileAsync(line);
+                if (blnRecordRemovedFromFile)
                 {
                     outboundQueue.Dequeue();
                     blnSuccess = true;
