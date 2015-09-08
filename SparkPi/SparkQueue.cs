@@ -111,7 +111,7 @@ namespace SparkPi
             _syncLock.Release();
         }
 
-        private void ProcessOutboundEvent(object o)
+        private async void ProcessOutboundEvent(object o)
         {
             _syncLock.Wait();
 
@@ -122,7 +122,7 @@ namespace SparkPi
                 {
                     //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
                     
-                    readDataFromFile();
+                   await readDataFromFile();
                 }
                 else
                 {
@@ -165,28 +165,37 @@ namespace SparkPi
 
             return result;
         }
-        private async void readDataFromFile()
+        private async Task<bool> readDataFromFile()
         {
+            bool blnSuccessfullyCheckedFoData = false;
+
             var line = "";
             try
             {
                 StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
+                StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
 
-                line = FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
+                IList<string> lines = await FileIO.ReadLinesAsync(file);
+                line = lines[0];
+                //line = await FileIO.ReadLinesAsync(file);
 
+                blnSuccessfullyCheckedFoData = true;
             }
             catch (Exception ex)
             {
                 vm.Errors.Add("ReadDataFromFile Error");
                 vm.Errors.Add(ex.Message.ToString());
+
+                blnSuccessfullyCheckedFoData = false;
             }
-            if (line != null)
+            if (line != null && line.Trim().Length > 10)
             {
-                Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
+                Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue.");
                 outboundQueue.Enqueue(line);
                
             }
+
+            return blnSuccessfullyCheckedFoData;
         }
 
         private System.Threading.SemaphoreSlim _removeDataLock = new SemaphoreSlim(1);
