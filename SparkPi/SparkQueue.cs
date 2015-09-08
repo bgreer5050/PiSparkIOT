@@ -67,7 +67,7 @@ namespace SparkPi
             //    Program.strPowerOuttageMissedDownEvent = "";
             //}
 
-            InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
+            //InboundDataTimer = new Timer(new TimerCallback(ProcessInboundEvent), new Object(), 250, 250);
             OutboundDataTimer = new Timer(new TimerCallback(ProcessOutboundEvent), new Object(), 250, 250);
 
             this.file = null;
@@ -217,6 +217,7 @@ namespace SparkPi
                     }
             try
             {
+                file = await folder.CreateFileAsync("SparkQueueDB.txt", CreationCollisionOption.ReplaceExisting);
                 using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
                 {
                     foreach (var l in lines)

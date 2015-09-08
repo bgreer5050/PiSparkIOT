@@ -345,10 +345,12 @@ namespace SparkPi
 
             listViewErrors.Items.Clear();
 
-            foreach (string s in this.viewModel.Errors)
-            {
-                listViewErrors.Items.Add(s);
-            }
+            //foreach (string s in this.viewModel.Errors)
+            //{
+            //    listViewErrors.Items.Add(s);
+            //}
+
+           
 
             listViewErrors.Background = redBrush;
             listViewErrors.Foreground = greenBrush;
