@@ -121,6 +121,7 @@ namespace SparkPi
                 if (outboundQueue.Count == 0)
                 {
                     //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
+                    
                     readDataFromFile();
                 }
                 else
@@ -164,32 +165,29 @@ namespace SparkPi
 
             return result;
         }
-        //private async void readDataFromFile()
-        //{
-        //    var line = "";
-        //    try
-        //    {
-        //        StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-        //        StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
-                
-        //        line =  FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
-             
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        vm.Errors.Add("ReadDataFromFile Error");
-        //        vm.Errors.Add(ex.Message.ToString());
-        //    }
-        //        if (line != null)
-        //        {
-        //            Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
-        //            outboundQueue.Enqueue(line);
-        //            if (DataReadyForPickUp != null)
-        //            {
-        //                DataReadyForPickUp(this, new EventArgs());
-        //            }
-        //        }
-        //}
+        private async void readDataFromFile()
+        {
+            var line = "";
+            try
+            {
+                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
+
+                line = FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+                vm.Errors.Add("ReadDataFromFile Error");
+                vm.Errors.Add(ex.Message.ToString());
+            }
+            if (line != null)
+            {
+                Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
+                outboundQueue.Enqueue(line);
+               
+            }
+        }
 
         private System.Threading.SemaphoreSlim _removeDataLock = new SemaphoreSlim(1);
         private async Task<bool> removeDataFromFileAsync(string lineToRemove)
