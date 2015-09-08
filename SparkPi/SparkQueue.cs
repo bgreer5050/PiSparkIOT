@@ -164,32 +164,32 @@ namespace SparkPi
 
             return result;
         }
-        private async void readDataFromFile()
-        {
-            var line = "";
-            try
-            {
-                StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-                StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
+        //private async void readDataFromFile()
+        //{
+        //    var line = "";
+        //    try
+        //    {
+        //        StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
+        //        StorageFile file = folder.GetFileAsync("SparkQueueDB.txt").AsTask().Result;
                 
-                line =  FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
+        //        line =  FileIO.ReadLinesAsync(file).AsTask().Result.FirstOrDefault();
              
-            }
-            catch (Exception ex)
-            {
-                vm.Errors.Add("ReadDataFromFile Error");
-                vm.Errors.Add(ex.Message.ToString());
-            }
-                if (line != null)
-                {
-                    Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
-                    outboundQueue.Enqueue(line);
-                    if (DataReadyForPickUp != null)
-                    {
-                        DataReadyForPickUp(this, new EventArgs());
-                    }
-                }
-        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        vm.Errors.Add("ReadDataFromFile Error");
+        //        vm.Errors.Add(ex.Message.ToString());
+        //    }
+        //        if (line != null)
+        //        {
+        //            Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
+        //            outboundQueue.Enqueue(line);
+        //            if (DataReadyForPickUp != null)
+        //            {
+        //                DataReadyForPickUp(this, new EventArgs());
+        //            }
+        //        }
+        //}
 
         private System.Threading.SemaphoreSlim _removeDataLock = new SemaphoreSlim(1);
         private async Task<bool> removeDataFromFileAsync(string lineToRemove)
@@ -208,21 +208,29 @@ namespace SparkPi
                             lines.Add(line);
                         }
                     }
-                    using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
+            try
+            {
+                using (StreamWriter writer = new StreamWriter(await file.OpenStreamForWriteAsync()))
+                {
+                    foreach (var l in lines)
                     {
-                        foreach (var l in lines)
+                        if (l.ToString() != lineToRemove)
                         {
-                            if (l.ToString() != lineToRemove)
-                            {
-                                writer.WriteLine(l);
-                            }
-                            else
-                            {
-                                Debug.WriteLine("LINE BEING REMOVED");
-                            }
+                            writer.WriteLine(l);
                         }
-                        result = true;
+                        else
+                        {
+                            Debug.WriteLine("LINE BEING REMOVED");
+                        }
                     }
+                    result = true;
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
             _removeDataLock.Release();
             return result;
         }

@@ -166,7 +166,7 @@ namespace SparkPi
             Debug.WriteLine("DATA READY FOR PICKUP NOT IMPLEMENTED");
             if(postSucceed)
             {
-                sparkQueue.Dequeue();
+               await sparkQueue.Dequeue();
             }
             _semaphore.Release();
         }
