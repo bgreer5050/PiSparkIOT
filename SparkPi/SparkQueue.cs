@@ -176,7 +176,10 @@ namespace SparkPi
                 StorageFile file = await folder.GetFileAsync("SparkQueueDB.txt");
 
                 IList<string> lines = await FileIO.ReadLinesAsync(file);
-                line = lines[0];
+                if (lines != null && lines.Count > 0)
+                {
+                    line = lines[0];
+                }
                 //line = await FileIO.ReadLinesAsync(file);
 
                 blnSuccessfullyCheckedFoData = true;
