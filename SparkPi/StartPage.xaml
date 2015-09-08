@@ -27,9 +27,9 @@
     xmlns:local="using:SparkPi"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d" Height="710">
+    mc:Ignorable="d" Height="710" Width="696.833">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="0,0,-0.333,-132">
 
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Height="626" Margin="40,10,10,74" Width="310">
             <StackPanel Height="120" Width="75">
@@ -44,7 +44,7 @@
             </StackPanel>
             <!--TRAFFIC LIGHTS END*****************************************************************************-->
 
-           
+
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="5" >
                 <TextBlock FontSize="20" VerticalAlignment="Center">System Start Time:</TextBlock>
@@ -54,7 +54,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock VerticalAlignment="Center" FontSize="20">Cycle Count:</TextBlock>
                 <TextBlock x:Name="txtCycleCount" FontSize="20"  VerticalAlignment="Center" Text=""></TextBlock>
-                
+
             </StackPanel>
 
 
@@ -69,11 +69,57 @@
 
                 <TextBlock x:Name="txtblockTime" FontSize="20" Foreground="White" />
             </StackPanel>
-            <TextBlock x:Name="tbError" Text="No Errors"></TextBlock>
-            <ListView x:Name="listViewErrors"  Height="150">
-                
+            <TextBlock x:Name="tbError" Text="System Messages" HorizontalAlignment="Center"></TextBlock>
+            <ListView x:Name="listViewErrors" Visibility="Collapsed"  Height="187">
+
             </ListView>
 
         </StackPanel>
+
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="167,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="191,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="215,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="239,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="263,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="287,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="311,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="332,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+            <StackPanel Height="100"/>
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="356,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="380,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F"/>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="404,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFCF371F"/>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="428,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFCF371F"/>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="452,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="476,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="500,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+        <StackPanel HorizontalAlignment="Left" Height="142" Margin="524,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+
+
+
     </Grid>
 </Page>

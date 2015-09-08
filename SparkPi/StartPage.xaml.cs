@@ -120,7 +120,7 @@ namespace SparkPi
 
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
-            txtblockTime.Text = dt.TimeOfDay.ToString();
+            txtblockTime.Text = dt.Hour.ToString() + ":" + dt.Minute.ToString(); // ToString("HH:mm:ss");
 
             //timer = new DispatcherTimer();
             //timer.Interval = TimeSpan.FromMilliseconds(500);
