@@ -75,50 +75,59 @@
             </ListView>
 
         </StackPanel>
+      
+            <!--<StackPanel HorizontalAlignment="Left" Height="142" Margin="167,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+                <StackPanel Height="100"/>
 
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="167,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
-            <StackPanel Height="100"/>
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="191,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+                <StackPanel Height="100"/>
 
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="215,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+                <StackPanel Height="100"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="239,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+                <StackPanel Height="100"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="263,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
+                <StackPanel Height="100"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="287,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+                <StackPanel Height="100"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="311,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+                <StackPanel Height="100"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="332,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+                <StackPanel Height="100"/>
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="356,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
+
+            </StackPanel>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="380,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F"/>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="404,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFCF371F"/>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="428,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFCF371F"/>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="452,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="476,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="500,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
+            <StackPanel HorizontalAlignment="Left" Height="142" Margin="524,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>-->
+       
+        <StackPanel Orientation="Horizontal" Margin="245,133,-245,-133">
+            <Ellipse x:Name="ledInbound" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
+            <Ellipse x:Name="ledOutbound" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
+            <Ellipse x:Name="ledPosting" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
+            <Ellipse x:Name="ledAux1" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
+            <Ellipse x:Name="ledAux2" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
+            <Ellipse x:Name="ledAux3" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
+            <Ellipse x:Name="ledAux4" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
         </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="191,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="215,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="239,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="263,531,0,0" VerticalAlignment="Top" Width="24" Background="#FF6BDA1E">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="287,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="311,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="332,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
-            <StackPanel Height="100"/>
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="356,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F">
-
-        </StackPanel>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="380,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFF7F70F"/>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="404,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFCF371F"/>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="428,531,0,0" VerticalAlignment="Top" Width="24" Background="#FFCF371F"/>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="452,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="476,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="500,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
-        <StackPanel HorizontalAlignment="Left" Height="142" Margin="524,531,0,0" VerticalAlignment="Top" Width="24" Background="Azure"/>
-
 
 
     </Grid>

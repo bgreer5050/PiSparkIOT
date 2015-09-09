@@ -20,10 +20,12 @@ namespace SparkPi
             this.TotalRunTimeMilliSeconds = 0;
             List<string> errorsList = new List<string>();
             this.Errors = errorsList;
+            this.Cluster = new TroubleshootingCluster();
             
         }
 
         public CycleLights CycleLights { get; set; }
+        public TroubleshootingCluster Cluster { get; set; }
         public long TotalNumberOfCycles { get; set; }
         public long TicksSinceLastCycle { get; set; }
         public long NumberOfHeartBeatsSinceLastStateChange { get; set; }
@@ -62,5 +64,8 @@ namespace SparkPi
             }
 
         }
+        public int MyProperty { get; set; }
+
+
     }
 }

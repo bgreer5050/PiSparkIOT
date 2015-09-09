@@ -349,6 +349,8 @@ namespace SparkPi
 
             if (cycleLights.RedON) { redLED.Fill = redBrush; } else { redLED.Fill = grayBrush; }
 
+             
+
             txtCycleCount.Text = totalNumberOfCycles.ToString();
 
             listViewErrors.Items.Clear();
@@ -364,6 +366,148 @@ namespace SparkPi
                     listViewErrors.Items.Add(strErrors[_x]);
                 }
             }
+           
+            switch(viewModel.Cluster.LedInbound)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledInbound.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledInbound.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledInbound.Fill = yellowBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Green:
+                    ledInbound.Fill = greenBrush;
+                    break;
+
+                default:
+                    ledInbound.Fill = grayBrush;
+                    break;
+            }
+
+
+            switch (viewModel.Cluster.LedOutbound)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledOutbound.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledOutbound.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledOutbound.Fill = yellowBrush;
+                    break;
+
+                default:
+                    ledOutbound.Fill = grayBrush;
+                    break;
+            }
+
+
+            switch (viewModel.Cluster.LedPosting)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledPosting.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledPosting.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledPosting.Fill = yellowBrush;
+                    break;
+
+                default:
+                    ledPosting.Fill = grayBrush;
+                    break;
+            }
+
+            switch (viewModel.Cluster.LedAux1)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledAux1.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledAux1.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledAux1.Fill = yellowBrush;
+                    break;
+
+                default:
+                    ledAux1.Fill = grayBrush;
+                    break;
+            }
+
+            switch (viewModel.Cluster.LedAux2)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledAux2.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledAux2.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledAux2.Fill = yellowBrush;
+                    break;
+
+                default:
+                    ledAux2.Fill = grayBrush;
+                    break;
+            }
+
+
+            switch (viewModel.Cluster.LedAux3)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledAux3.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledAux3.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledAux3.Fill = yellowBrush;
+                    break;
+
+                default:
+                    ledAux3.Fill = grayBrush;
+                    break;
+            }
+
+            switch (viewModel.Cluster.LedAux4)
+            {
+                case TroubleshootingCluster.Color.Gray:
+                    ledAux4.Fill = grayBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Red:
+                    ledAux4.Fill = redBrush;
+                    break;
+
+                case TroubleshootingCluster.Color.Yellow:
+                    ledAux4.Fill = yellowBrush;
+                    break;
+
+                default:
+                    ledAux4.Fill = grayBrush;
+                    break;
+            }
+
+
            
 
 
