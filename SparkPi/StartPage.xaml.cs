@@ -121,7 +121,6 @@ namespace SparkPi
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             txtblockTime.Text = dt.Hour.ToString() + ":" + dt.Minute.ToString(); // ToString("HH:mm:ss");
-
             //timer = new DispatcherTimer();
             //timer.Interval = TimeSpan.FromMilliseconds(500);
             //timer.Tick += Timer_Tick;
@@ -356,12 +355,15 @@ namespace SparkPi
 
             //We create a seperate list to hold our errors.  If our collection is modified
             //while we are iterating, we will get an error.
-            string[] strErrors = viewModel.Errors.ToArray();
-            for(var _x = 0; _x < strErrors.Length; _x++)
-            {
-                listViewErrors.Items.Add(strErrors[_x]);
-            }
 
+            if (viewModel.Errors != null && viewModel.Errors.Count > 0)
+            {
+                string[] strErrors = viewModel.Errors.ToArray();
+                for (var _x = 0; _x < strErrors.Length; _x++)
+                {
+                    listViewErrors.Items.Add(strErrors[_x]);
+                }
+            }
            
 
 

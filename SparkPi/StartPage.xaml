@@ -67,7 +67,7 @@
             <StackPanel>
                 <TextBlock x:Name="DelayText" Text="500ms" Margin="5" TextAlignment="Center" FontSize="20" />
 
-                <TextBlock x:Name="txtblockTime" FontSize="20" Foreground="White" />
+                <TextBlock x:Name="txtblockTime"  FontSize="20" Foreground="White" />
             </StackPanel>
             <TextBlock x:Name="tbError" Text="System Messages" HorizontalAlignment="Center"></TextBlock>
             <ListView x:Name="listViewErrors" Visibility="Collapsed"  Height="187">
