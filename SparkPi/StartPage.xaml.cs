@@ -231,17 +231,17 @@ namespace SparkPi
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
-            //Test = "BLANK";
-
-            if(OutPutHeartBeatPinTesting.Read()==GpioPinValue.High)
-            {
-                OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
-            }
-            else
-            {
-                OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
-                outPutCounter += 1;
-            }
+            
+            //BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
+            //if(OutPutHeartBeatPinTesting.Read()==GpioPinValue.High)
+            //{
+            //    OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
+            //}
+            //else
+            //{
+            //    OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+            //    outPutCounter += 1;
+            //}
 
                 txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
                
@@ -287,16 +287,20 @@ namespace SparkPi
 
         private void setUpBoardIO()
         {
+            //The OutPutHeartBeatPin will be set to high.  When the isolation relay
+            //on the machine closes our OutPutHearBeatPin will send 5v to the hearBeatPin
+
 
             var gpioController = GpioController.GetDefault();
             heartBeatPin = gpioController.OpenPin(5);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(500);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
             OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
+            OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
 
         }
 
