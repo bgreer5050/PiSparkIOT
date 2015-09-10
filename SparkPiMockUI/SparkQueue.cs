@@ -141,10 +141,7 @@ namespace SparkPiMockUI
                 {
                     Debug.WriteLine("There is something on the SD Card.  Add it to the outbound queue and fire DataReadyForPickup");
                     outboundQueue.Enqueue(line);
-                    if (DataReadyForPickUp != null)
-                    {
-                        DataReadyForPickUp(this, new EventArgs());
-                    }
+                   
                 }
             }
         }
