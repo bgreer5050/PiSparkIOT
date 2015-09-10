@@ -30,6 +30,13 @@ namespace SparkPi
         //***************************************************************************************************
 
 
+
+        /// <summary>
+        /// Piface  ***********************************************************************************
+        /// </summary>
+        PiFaceSpiDriver spi_driver = new PiFaceSpiDriver();
+        private DispatcherTimer timer;
+
         /// <summary>
         /// Data Collection Variables **********************************************************************
         /// </summary>
@@ -60,7 +67,6 @@ namespace SparkPi
         /// <summary>
         /// Timers **********************************************************************
         /// </summary>
-        private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
         private DispatcherTimer TimerUpdateUI;
         private static System.Threading.Timer systemStateMonitor;
@@ -111,6 +117,9 @@ namespace SparkPi
            
             InitializeComponent();
             viewModel = new ViewModel();
+
+
+
             SetUpMisc();
             //while(true)
             //{
@@ -136,6 +145,19 @@ namespace SparkPi
             TimerUpdateUI.Tick += TimerUpdateUI_Tick;
             TimerUpdateUI.Start();
 
+            
+            /// Piface Stuff *************************************************
+            Init();
+            timer = new DispatcherTimer();
+            timer.Interval = TimeSpan.FromMilliseconds(100);
+            timer.Tick += Timer_Tick;
+            //timer.Start();
+
+            spi_driver.PiFaceInterrupt += Spi_driver_PiFaceInterrupt;
+            ///*******************************************************************
+
+
+
             setUpSystem();
             setUpBoardIO();
 
@@ -148,6 +170,42 @@ namespace SparkPi
 
             //Utilities.SparkEmail.Send("TEST FROM PI");
         }
+
+
+
+        /// <summary>
+        /// Piface Method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Spi_driver_PiFaceInterrupt(object sender, PiFaceEventArgs e)
+        {
+            int state = spi_driver.ReadGPB();
+            state &= ~e.PinMask;
+            state |= e.PinState & e.PinMask;
+            spi_driver.WriteGPA((byte)(~(state)));
+        }
+
+        /// <summary>
+        /// Piface Method
+        /// </summary>
+        private async void Init()
+        {
+            await spi_driver.InitHardware();
+        }
+        /// <summary>
+        /// Piface Method
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Timer_Tick(object sender, object e)
+        {
+            byte state = spi_driver.ReadGPB();
+            Status.Text = state.ToString();
+            state &= 0xAF;
+            spi_driver.WriteGPA(state);
+        }
+
 
         private async void SetUpMisc()
         {

@@ -128,7 +128,9 @@
             <Ellipse x:Name="ledAux3" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
             <Ellipse x:Name="ledAux4" Fill="Green" Stroke="White" Width="15" Height="15" Margin="10"/>
         </StackPanel>
-
+        <StackPanel>
+            <TextBlock FontSize="30" x:Name="Status" Text="Status"></TextBlock>
+        </StackPanel>
 
     </Grid>
 </Page>
