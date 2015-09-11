@@ -13,6 +13,8 @@ namespace SparkPi
         private string modelNumber;
         private string revision;
 
+        public List<string> Errors;
+
         public Controller()
         {
             this.modelNumber = "Pi 2";
@@ -51,6 +53,7 @@ namespace SparkPi
         private int _heartbeatsRequiredToChangeState;
         private string _enabled;
 
+        public List<string> Errors;
 
         public Configuration()
         {

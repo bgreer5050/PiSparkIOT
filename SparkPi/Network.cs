@@ -15,6 +15,8 @@ namespace SparkPi
         private bool _networkUp;
         public bool IsNetworkAvailable; //Use NetworkINterface.IsNetworkAvailabe
 
+        public List<string> Errors;
+
         public string MacAddress
         {
             get

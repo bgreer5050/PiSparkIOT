@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SparkPi
+namespace SparkPi.VM
 {
     public class ViewModel
     {
@@ -66,6 +66,9 @@ namespace SparkPi
         }
         public int MyProperty { get; set; }
 
-
+        public void BindBusinessLayerToViewModel()
+        {
+            
+        }
     }
 }

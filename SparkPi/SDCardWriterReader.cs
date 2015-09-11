@@ -14,8 +14,11 @@ namespace SparkPi
 {
     public class SDCardWriterReader
     {
+
         StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-        
+
+        public List<string> Errors;
+
         public async void WriteToSDCardAsync()
         {
 

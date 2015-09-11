@@ -27,13 +27,13 @@ namespace SparkPi
         private Object FILELOCK = new Object();
         public StorageFolder folder;
         public StorageFile file;
-
-        private ViewModel vm;
+        public List<string> Errors;
+       
 
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
         
 
-        public SparkQueue(ViewModel vm)
+        public SparkQueue()
         {
             this.vm = vm;
             //initializeClass();
