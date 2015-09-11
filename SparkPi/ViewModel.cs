@@ -11,9 +11,9 @@ namespace SparkPi.VM
         /// <summary>
         /// Create all of the objects and values we will need for our View on ctor
         /// </summary>
-        public ViewModel()
+        public ViewModel(Controller controller, Configuration configuration, CycleLights cycleLights, Network network, SparkQueue sparkQueue, StartPage startPage)
         {
-            this.CycleLights = new CycleLights();
+            this.CycleLights = cycleLights;
             this.TotalNumberOfCycles = 0;
             this.TicksSinceLastCycle = 0;
             this.NumberOfHeartBeatsSinceLastStateChange = 0;
@@ -21,7 +21,11 @@ namespace SparkPi.VM
             List<string> errorsList = new List<string>();
             this.Errors = errorsList;
             this.Cluster = new TroubleshootingCluster();
-            
+            this.Controller = controller;
+            this.Configuration = configuration;
+            this.Network = network;
+            this.SparkQueue = sparkQueue;
+            this.StartPage = startPage;
         }
 
         public CycleLights CycleLights { get; set; }
@@ -67,7 +71,11 @@ namespace SparkPi.VM
         }
         public int MyProperty { get; set; }
         public StartPage.SystemState CurrentSystemState { get; private set; }
-
+        public Controller Controller { get; private set; }
+        public Configuration Configuration { get; private set; }
+        public Network Network { get; private set; }
+        public SparkQueue SparkQueue { get; private set; }
+        public StartPage StartPage { get; private set; }
 
         public void BindBusinessLayerToViewModel()
         {
@@ -79,6 +87,8 @@ namespace SparkPi.VM
             this.TotalNumberOfCycles = StartPage.totalNumberOfCycles;
             this.TotalRunTimeMilliSeconds = StartPage.totalRuntimeMilliseconds;
             this.CurrentSystemState = StartPage.currentSystemState;
+
+           
         }
     }
 }

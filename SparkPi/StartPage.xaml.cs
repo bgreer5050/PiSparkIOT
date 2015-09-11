@@ -111,7 +111,6 @@ namespace SparkPi
         {
            
             InitializeComponent();
-            viewModel = new VM.ViewModel();
             SetUpMisc();
             //while(true)
             //{
@@ -143,6 +142,8 @@ namespace SparkPi
             controller = new Controller();
             configuration = new Configuration();
             network = new Network();
+            viewModel = new VM.ViewModel(controller, configuration, cycleLights, network, sparkQueue, this);
+
             //sparkQueue = new SparkQueue();
             sparkQueue.DataReadyForPickUp += SparkQueue_DataReadyForPickUp;
         }
@@ -342,31 +343,60 @@ namespace SparkPi
 
         private void UpdateUI()
         {
-            if (cycleLights.GreenOn) { greenLED.Fill = greenBrush; } else { greenLED.Fill = grayBrush; }
+            if (viewModel.CycleLights.GreenOn) { greenLED.Fill = greenBrush; } else { greenLED.Fill = grayBrush; }
 
-            if (cycleLights.YellowON) { yellowLED.Fill = yellowBrush; } else { yellowLED.Fill = grayBrush; }
+            if (viewModel.CycleLights.YellowON) { yellowLED.Fill = yellowBrush; } else { yellowLED.Fill = grayBrush; }
 
-            if (cycleLights.RedON) { redLED.Fill = redBrush; } else { redLED.Fill = grayBrush; }
+            if (viewModel.CycleLights.RedON) { redLED.Fill = redBrush; } else { redLED.Fill = grayBrush; }
 
              
 
-            txtCycleCount.Text = totalNumberOfCycles.ToString();
+            txtCycleCount.Text = viewModel.TotalNumberOfCycles.ToString();
 
+
+
+            //*****************************************************************************************
+            //************************    Get Object Errors To Place In View **************************
             listViewErrors.Items.Clear();
 
             //We create a seperate list to hold our errors.  If our collection is modified
             //while we are iterating, we will get an error.
 
-            if (viewModel.Errors != null && viewModel.Errors.Count > 0)
-            {
-                string[] strErrors = viewModel.Errors.ToArray();
-                for (var _x = 0; _x < strErrors.Length; _x++)
+
+            string[] strControllerErrors = viewModel.Controller.Errors.ToArray(); 
+            string[] strConfigurationErrors = viewModel.Configuration.Errors.ToArray();
+            string[] strNetworkErrors = viewModel.Network.Errors.ToArray();
+            string[] strSparQueueErrors = viewModel.SparkQueue.Errors.ToArray();
+            
+
+            for (var _x = 0; _x < strControllerErrors.Length; _x++)
                 {
-                    listViewErrors.Items.Add(strErrors[_x]);
+                    listViewErrors.Items.Add(strControllerErrors[_x]);
                 }
+
+            for (var _x = 0; _x < strConfigurationErrors.Length; _x++)
+            {
+                listViewErrors.Items.Add(strConfigurationErrors[_x]);
             }
-           
-            switch(viewModel.Cluster.LedInbound)
+
+            for (var _x = 0; _x < strNetworkErrors.Length; _x++)
+            {
+                listViewErrors.Items.Add(strNetworkErrors[_x]);
+            }
+
+            for (var _x = 0; _x < strSparQueueErrors.Length; _x++)
+            {
+                listViewErrors.Items.Add(strSparQueueErrors[_x]);
+            }
+
+
+
+            //*********************************************************************************************
+
+
+
+
+            switch (viewModel.Cluster.LedInbound)
             {
                 case TroubleshootingCluster.Color.Gray:
                     ledInbound.Fill = grayBrush;
