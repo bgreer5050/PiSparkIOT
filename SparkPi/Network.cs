@@ -16,7 +16,13 @@ namespace SparkPi
         public bool IsNetworkAvailable; //Use NetworkINterface.IsNetworkAvailabe
 
         public List<string> Errors;
+        public List<string> ObjectMessages;
 
+        public Network()
+        {
+            this.Errors = new List<string>();
+            this.ObjectMessages = new List<string>();
+        }
         public string MacAddress
         {
             get

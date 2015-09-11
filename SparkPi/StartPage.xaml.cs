@@ -25,7 +25,8 @@ namespace SparkPi
         public Network network;
         public Configuration configuration;
         public Controller controller;
-        public ViewModel viewModel;
+        public VM.ViewModel viewModel;
+
         public SparkQueue sparkQueue;
         //***************************************************************************************************
 
@@ -34,11 +35,11 @@ namespace SparkPi
         /// Data Collection Variables **********************************************************************
         /// </summary>
         public static DateTime timeOfSystemStartup;
-        private static DateTime timeOfLastSystemStateChange;
-        private static DateTime timeOfLastHeartbeat;
-        private static long numberOfHeartBeatsSinceLastStateChange;
-        private static long totalNumberOfCycles;
-        private static long totalRuntimeMilliseconds;
+        public static DateTime timeOfLastSystemStateChange;
+        public static DateTime timeOfLastHeartbeat;
+        public static long numberOfHeartBeatsSinceLastStateChange;
+        public static long totalNumberOfCycles;
+        public static long totalRuntimeMilliseconds;
         public static SystemState currentSystemState;
         //****************************************************************************************************
 
@@ -110,7 +111,7 @@ namespace SparkPi
         {
            
             InitializeComponent();
-            viewModel = new ViewModel();
+            viewModel = new VM.ViewModel();
             SetUpMisc();
             //while(true)
             //{
@@ -144,14 +145,11 @@ namespace SparkPi
             network = new Network();
             //sparkQueue = new SparkQueue();
             sparkQueue.DataReadyForPickUp += SparkQueue_DataReadyForPickUp;
-
-
-            //Utilities.SparkEmail.Send("TEST FROM PI");
         }
 
         private async void SetUpMisc()
         {
-            sparkQueue = new SparkQueue(this.viewModel);
+            sparkQueue = new SparkQueue();
             sparkQueue.itializeClass().Wait();
         }
 
@@ -231,7 +229,6 @@ namespace SparkPi
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
-            
             //BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
             //if(OutPutHeartBeatPinTesting.Read()==GpioPinValue.High)
             //{
@@ -244,7 +241,6 @@ namespace SparkPi
             //}
 
                 txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
-               
           
             Debug.WriteLine(inputCounter.ToString());
             Debug.WriteLine(outPutCounter.ToString());
@@ -252,7 +248,6 @@ namespace SparkPi
 
         private void setUpSystem()
         {
-            
             cycleLights = new CycleLights();
             //timeOfSystemStartup = DateTime.UtcNow;
             //txtblockTime.Text = timeOfSystemStartup.time ToShortDateString();

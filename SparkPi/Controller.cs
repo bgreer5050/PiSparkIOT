@@ -14,10 +14,13 @@ namespace SparkPi
         private string revision;
 
         public List<string> Errors;
+        public List<string> ObjectMessages;
 
         public Controller()
         {
             this.modelNumber = "Pi 2";
+            this.Errors = new List<string>();
+            this.ObjectMessages = new List<string>();
 
         }
 
@@ -54,6 +57,7 @@ namespace SparkPi
         private string _enabled;
 
         public List<string> Errors;
+        public List<string> ObjectMessages;
 
         public Configuration()
         {
@@ -61,6 +65,9 @@ namespace SparkPi
             this._gracePeriodMultiple = 2.0f;
             this.CycleLengthMs = 5000;
             this.HeartbeatsRequiredToChangeState = 2;
+
+            this.Errors = new List<string>();
+            this.ObjectMessages = new List<string>();
 
         }
 

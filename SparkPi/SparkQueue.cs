@@ -28,6 +28,7 @@ namespace SparkPi
         public StorageFolder folder;
         public StorageFile file;
         public List<string> Errors;
+        public List<string> ObjectMessages;
        
 
         private SemaphoreSlim _syncLock = new SemaphoreSlim(1);
@@ -35,10 +36,11 @@ namespace SparkPi
 
         public SparkQueue()
         {
-            this.vm = vm;
+
             //initializeClass();
-           
-                vm.Errors.Add("SparkQueue Created");
+            this.Errors = new List<string>();
+            this.ObjectMessages = new List<string>();
+
         }
         public async Task itializeClass()
         {
@@ -53,8 +55,8 @@ namespace SparkPi
             }
             catch (Exception ex)
             {
-                vm.Errors.Add("Queue Failed To Initialize");
-                vm.Errors.Add(ex.Message.ToString());
+                this.Errors.Add("Queue Failed To Initialize");
+                this.Errors.Add(ex.Message.ToString());
                 
             }
 
@@ -92,7 +94,7 @@ namespace SparkPi
                     }
                     catch (Exception exc)
                     {
-                       vm.Errors.Add(exc.Message.ToString());
+                       this.Errors.Add(exc.Message.ToString());
                        success = false;
                     }
 
@@ -105,8 +107,8 @@ namespace SparkPi
             }
             catch (Exception ex)
             {
-                vm.Errors.Add("SparkQueue Exception - L108");
-                vm.Errors.Add(ex.Message.ToString());
+                this.Errors.Add("SparkQueue Exception - L108");
+                this.Errors.Add(ex.Message.ToString());
             }
             _syncLock.Release();
         }
@@ -187,8 +189,8 @@ namespace SparkPi
             }
             catch (Exception ex)
             {
-                vm.Errors.Add("ReadDataFromFile Error");
-                vm.Errors.Add(ex.Message.ToString());
+                this.Errors.Add("ReadDataFromFile Error");
+                this.Errors.Add(ex.Message.ToString());
 
                 blnSuccessfullyCheckedFoData = false;
             }

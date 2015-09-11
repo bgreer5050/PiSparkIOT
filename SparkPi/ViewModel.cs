@@ -39,6 +39,7 @@ namespace SparkPi.VM
         }
         public DateTime SystemStartupTime { get; set; }
         public DateTime TimeOfLastHeartBeat { get; set; }
+        public DateTime TimeOfLastSystemStateChange { get; set; }
         public double TotalMilliSecondsSinceLastCycle
         {
             get
@@ -65,10 +66,19 @@ namespace SparkPi.VM
 
         }
         public int MyProperty { get; set; }
+        public StartPage.SystemState CurrentSystemState { get; private set; }
+
 
         public void BindBusinessLayerToViewModel()
         {
-            
+            this.SystemStartupTime = StartPage.timeOfSystemStartup;
+            this.SystemTime = DateTime.Now;
+            this.TimeOfLastSystemStateChange = StartPage.timeOfLastSystemStateChange;
+            this.TimeOfLastHeartBeat = StartPage.timeOfLastHeartbeat;
+            this.NumberOfHeartBeatsSinceLastStateChange = StartPage.numberOfHeartBeatsSinceLastStateChange;
+            this.TotalNumberOfCycles = StartPage.totalNumberOfCycles;
+            this.TotalRunTimeMilliSeconds = StartPage.totalRuntimeMilliseconds;
+            this.CurrentSystemState = StartPage.currentSystemState;
         }
     }
 }
