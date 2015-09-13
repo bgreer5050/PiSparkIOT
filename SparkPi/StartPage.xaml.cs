@@ -352,6 +352,8 @@ namespace SparkPi
              
 
             txtCycleCount.Text = viewModel.TotalNumberOfCycles.ToString();
+            Debug.WriteLine("TOTAL CYCLE COUNT: " + StartPage.totalNumberOfCycles.ToString());
+            Debug.WriteLine("TOTAL CYCLE COUNT: " + viewModel.TotalNumberOfCycles.ToString());
 
 
 

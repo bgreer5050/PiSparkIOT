@@ -70,7 +70,7 @@
                 <TextBlock x:Name="txtblockTime"  FontSize="20" Foreground="White" />
             </StackPanel>
             <TextBlock x:Name="tbError" Text="System Messages" HorizontalAlignment="Center"></TextBlock>
-            <ListView x:Name="listViewErrors" Visibility="Collapsed"  Height="187">
+            <ListView x:Name="listViewErrors"   Height="187">
 
             </ListView>
 

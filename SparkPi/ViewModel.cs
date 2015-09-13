@@ -87,7 +87,8 @@ namespace SparkPi.VM
             this.TotalNumberOfCycles = StartPage.totalNumberOfCycles;
             this.TotalRunTimeMilliSeconds = StartPage.totalRuntimeMilliseconds;
             this.CurrentSystemState = StartPage.currentSystemState;
-
+            find all references to cycle lights
+                AND CYCLE COUNT
            
         }
     }
