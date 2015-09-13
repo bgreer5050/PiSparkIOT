@@ -28,6 +28,7 @@ namespace SparkPi
         public VM.ViewModel viewModel;
 
         public SparkQueue sparkQueue;
+        public PowerOuttageHandler powerHandler;
         //***************************************************************************************************
 
 
@@ -138,10 +139,12 @@ namespace SparkPi
 
             setUpSystem();
             setUpBoardIO();
+            powerHandler = new PowerOuttageHandler();
 
             controller = new Controller();
             configuration = new Configuration();
             network = new Network();
+
             viewModel = new VM.ViewModel(controller, configuration, cycleLights, network, sparkQueue, this);
 
             //sparkQueue = new SparkQueue();
