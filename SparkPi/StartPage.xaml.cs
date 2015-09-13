@@ -307,19 +307,8 @@ namespace SparkPi
             if (sender.Read() == GpioPinValue.High)
             {
                 inputCounter += 1;
-                cycleLights.GreenOn = true;
-                cycleLights.YellowON = false;
-                cycleLights.RedON = false;
                 handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
-
             }
-            else
-            {
-                cycleLights.GreenOn = false;
-                cycleLights.YellowON = true;
-                cycleLights.RedON = false;
-            }
-
             Debug.WriteLine(sender.Read().ToString());
         }
 
@@ -357,7 +346,27 @@ namespace SparkPi
             txtCycleCount.Text = viewModel.TotalNumberOfCycles.ToString();
             Debug.WriteLine("TOTAL CYCLE COUNT: " + StartPage.totalNumberOfCycles.ToString());
             Debug.WriteLine("TOTAL CYCLE COUNT: " + viewModel.TotalNumberOfCycles.ToString());
+            //*****************************************************************************************
+            //************************    Update Cycle Lights **************************
 
+            if(currentSystemState == SystemState.RUNNING)
+            {
+                cycleLights.GreenOn = true;
+                cycleLights.YellowON = false;
+                cycleLights.RedON = false;
+
+                TimeSpan ts = DateTime.Now - timeOfLastSystemStateChange;
+                if(ts.Milliseconds > configuration.CycleLengthMs)
+                {
+                    cycleLights.YellowON = false;
+                }
+            }
+            else
+            {
+                cycleLights.GreenOn = false;
+                cycleLights.YellowON = false;
+                cycleLights.RedON = true;
+            }
 
 
             //*****************************************************************************************
