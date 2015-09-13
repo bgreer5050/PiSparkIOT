@@ -343,6 +343,8 @@ namespace SparkPi
 
         private void UpdateUI()
         {
+            viewModel.BindBusinessLayerToViewModel();
+
             if (viewModel.CycleLights.GreenOn) { greenLED.Fill = greenBrush; } else { greenLED.Fill = grayBrush; }
 
             if (viewModel.CycleLights.YellowON) { yellowLED.Fill = yellowBrush; } else { yellowLED.Fill = grayBrush; }
