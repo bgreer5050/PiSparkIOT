@@ -139,7 +139,7 @@ namespace SparkPi
 
             setUpSystem();
             setUpBoardIO();
-            powerHandler = new PowerOuttageHandler();
+            //powerHandler = new PowerOuttageHandler();
 
             controller = new Controller();
             configuration = new Configuration();
@@ -172,78 +172,79 @@ namespace SparkPi
             _semaphore.Release();
         }
 
-        //private async Task<bool> ProcessOutboundQueue()
-        //{
-        //    string postData = "";
-        //    bool blnPostSuccessful = false;
-        //    // TODO Decide how many times I should try to post until we cancel ???
-        //    StringBuilder sb = new StringBuilder();
-        //    postData = sparkQueue.Peek();
-        //    Debug.WriteLine("Post Data: " + postData);
-
-        //    if (postData != null && postData.Length > 10)
-        //    {
-        //        HttpClient client = new HttpClient();
-        //        //var body = String.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com", MyCredentials, MyCredentials2);
-        //        var body = String.Format(postData);
-        //        StringContent theContent = new StringContent(body, System.Text.Encoding.UTF8, "application/x-www-form-urlencoded");
-        //        HttpResponseMessage aResponse;
-        //        try
-        //        {
-        //            aResponse = await client.PostAsync(new Uri(@"http://sparkhub.metal-matic.com/api/MachineRunState/Record"), theContent);
-        //        }
-        //        catch (HttpRequestException ex)
-        //        {
-        //            // TODO Update View Model Errors
-
-        //            Debug.WriteLine(ex.Message);
-        //            viewModel.Errors.Add("L197" + ex.Message);
-        //            return false;
-        //        }
-
-        //        Debug.WriteLine(aResponse.StatusCode);
-        //        if (aResponse.StatusCode == System.Net.HttpStatusCode.OK)
-        //        {
-        //            //   sparkQueue.Dequeue();
-        //            return true;
-        //        }
-
-        //        Debug.WriteLine("Post Status Code: " + aResponse.StatusCode.ToString()); 
-        //    }
-        //    else
-        //    {
-        //        blnPostSuccessful = false;
-        //    }
-        //    return blnPostSuccessful;
-
-        //}
-
         private async Task<bool> ProcessOutboundQueue()
         {
+            string postData = "";
+            bool blnPostSuccessful = false;
+            // TODO Decide how many times I should try to post until we cancel ???
+            StringBuilder sb = new StringBuilder();
+            postData = sparkQueue.Peek();
+            Debug.WriteLine("Post Data: " + postData);
 
-            bool r = await Task.Run(() =>
+            if (postData != null && postData.Length > 10)
             {
+                HttpClient client = new HttpClient();
+                //var body = String.Format("grant_type=client_credentials&client_id={0}&client_secret={1}&scope=notify.windows.com", MyCredentials, MyCredentials2);
+                var body = String.Format(postData);
+                StringContent theContent = new StringContent(body, System.Text.Encoding.UTF8, "application/x-www-form-urlencoded");
+                HttpResponseMessage aResponse;
+                try
+                {
+                    aResponse = await client.PostAsync(new Uri(@"http://sparkhub.metal-matic.com/api/MachineRunState/Record"), theContent);
+                }
+                catch (HttpRequestException ex)
+                {
+                    // TODO Update View Model Errors
 
-                return true;
-            });
+                    Debug.WriteLine(ex.Message);
+                    viewModel.Errors.Add("L197" + ex.Message);
+                    return false;
+                }
 
-            return r;
+                Debug.WriteLine(aResponse.StatusCode);
+                if (aResponse.StatusCode == System.Net.HttpStatusCode.OK)
+                {
+                    //   sparkQueue.Dequeue();
+                    return true;
+                }
 
+                Debug.WriteLine("Post Status Code: " + aResponse.StatusCode.ToString());
+            }
+            else
+            {
+                blnPostSuccessful = false;
+            }
+            return blnPostSuccessful;
 
         }
+
+        // For Testing Only
+        //private async Task<bool> ProcessOutboundQueue()
+        //{
+
+        //    bool r = await Task.Run(() =>
+        //    {
+
+        //        return true;
+        //    });
+
+        //    return r;
+
+
+        //}
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
             //BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
-            if (OutPutHeartBeatPinTesting.Read() == GpioPinValue.High)
-            {
-                OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
-            }
-            else if(DateTime.Now.Second > 30)
-            {
-                OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
-                outPutCounter += 1;
-            }
+            //if (OutPutHeartBeatPinTesting.Read() == GpioPinValue.High)
+            //{
+            //    OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
+            //}
+            //else if(DateTime.Now.Second > 30)
+            //{
+            //    OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+            //    outPutCounter += 1;
+            //}
 
             txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
           
@@ -558,8 +559,8 @@ namespace SparkPi
 
 
 
-            listViewErrors.Background = redBrush;
-            listViewErrors.Foreground = greenBrush;
+            //listViewErrors.Background = redBrush;
+            //listViewErrors.Foreground = greenBrush;
         }
 
 
