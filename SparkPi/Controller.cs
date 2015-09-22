@@ -21,7 +21,6 @@ namespace SparkPi
             this.modelNumber = "Pi 2";
             this.Errors = new List<string>();
             this.ObjectMessages = new List<string>();
-
         }
 
 
@@ -42,10 +41,7 @@ namespace SparkPi
             get { return revision; }
             set { revision = value; }
         }
-
-
-
-
+                
     }
 
     public class Configuration
@@ -61,7 +57,7 @@ namespace SparkPi
 
         public Configuration()
         {
-            this.AssetNumber = "155";
+            this.AssetNumber = "9999";
             this._gracePeriodMultiple = 2.0f;
             this.CycleLengthMs = 80000;
             this.HeartbeatsRequiredToChangeState = 2;
