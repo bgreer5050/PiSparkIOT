@@ -235,7 +235,7 @@ namespace SparkPi
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
-           // BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
+            // BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
             //if (OutPutHeartBeatPinTesting.Read() == GpioPinValue.High)
             //{
             //    OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
