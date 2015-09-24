@@ -55,6 +55,8 @@ namespace SparkPi
         private GpioPin heartBeatPin;
         private GpioPin OutPutHeartBeatPinTesting;
 
+        private GpioPin outputTestPin;
+        private GpioPin inputTestPin;
         //***********************************************************************************
 
 
@@ -246,6 +248,17 @@ namespace SparkPi
             //    outPutCounter += 1;
             //}
 
+
+            if (outputTestPin.Read() == GpioPinValue.High)
+            {
+                outputTestPin.Write(GpioPinValue.Low);
+            }
+            else if (DateTime.Now.Second > 30)
+            {
+                OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+                outPutCounter += 1;
+            }
+
             txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
           
             Debug.WriteLine(inputCounter.ToString());
@@ -302,6 +315,40 @@ namespace SparkPi
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
             OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
             OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+
+
+
+
+            
+
+            outputTestPin = gpioController.OpenPin(2);
+            bool TEST2 = outputTestPin.IsDriveModeSupported(GpioPinDriveMode.Output);
+
+            outputTestPin.SetDriveMode(GpioPinDriveMode.Output);
+            outputTestPin.Write(GpioPinValue.Low);
+
+            inputTestPin = gpioController.OpenPin(3);
+            bool TEST = inputTestPin.IsDriveModeSupported(GpioPinDriveMode.InputPullDown);
+
+
+
+            inputTestPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            inputTestPin.ValueChanged += InputTestPin_ValueChanged;
+        }
+
+        private void InputTestPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
+        {
+            Debug.WriteLine("INPUT TEST SUCCESS");
+            Debug.WriteLine("INPUT TEST SUCCESS");
+            Debug.WriteLine("INPUT TEST SUCCESS");
+            Debug.WriteLine("INPUT TEST SUCCESS");
+
+            Debug.WriteLine("INPUT VALUE: " + sender.Read());
+
+            Debug.WriteLine("INPUT TEST SUCCESS");
+            Debug.WriteLine("INPUT TEST SUCCESS");
+            Debug.WriteLine("INPUT TEST SUCCESS");
+            Debug.WriteLine("INPUT TEST SUCCESS");
 
         }
 
