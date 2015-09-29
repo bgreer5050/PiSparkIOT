@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Media;
 
+
 namespace SparkPi
 {
     public sealed partial class StartPage : Page
@@ -149,6 +150,8 @@ namespace SparkPi
 
             //sparkQueue = new SparkQueue();
             sparkQueue.DataReadyForPickUp += SparkQueue_DataReadyForPickUp;
+
+            Utilities.SparkEmail.Send(this.configuration.AssetNumber + " Spark Controller Starting");
         }
 
         private async void SetUpMisc()
@@ -235,7 +238,7 @@ namespace SparkPi
 
         private void TimerDateTime_Tick1(object sender, object e)
         {
-           // BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
+            // BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
             //if (OutPutHeartBeatPinTesting.Read() == GpioPinValue.High)
             //{
             //    OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
@@ -260,7 +263,7 @@ namespace SparkPi
             txtSystemStartTime.Text = DateTime.Now.TimeOfDay.ToString();
             currentSystemState = SystemState.DOWN;
 
-            systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 1000, 1000);
+            systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 500, 500);
         }
 
         private void stateMonitorCheck(object state)
@@ -296,7 +299,7 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(5);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(500);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
