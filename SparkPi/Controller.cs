@@ -59,8 +59,8 @@ namespace SparkPi
         {
             this.AssetNumber = "1081";
             this._gracePeriodMultiple = 2.0f;
-            this.CycleLengthMs = 60000;
-            this.HeartbeatsRequiredToChangeState = 2;
+            this.CycleLengthMs = 80000;
+            this.HeartbeatsRequiredToChangeState = 1;
 
             this.Errors = new List<string>();
             this.ObjectMessages = new List<string>();

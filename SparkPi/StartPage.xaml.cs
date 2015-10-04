@@ -67,6 +67,11 @@ namespace SparkPi
         private DispatcherTimer timerDateTime;
         private DispatcherTimer TimerUpdateUI;
         private static System.Threading.Timer systemStateMonitor;
+        private static System.Threading.Timer cycleCountUpdate;
+
+
+
+
         //************************************************************************************
 
         /// <summary>
@@ -201,6 +206,7 @@ namespace SparkPi
 
                     Debug.WriteLine(ex.Message);
                     viewModel.Errors.Add("L197" + ex.Message);
+                    Utilities.SparkEmail.Send(configuration.AssetNumber + " -L197- " + ex.Message);
                     return false;
                 }
 
@@ -209,6 +215,10 @@ namespace SparkPi
                 {
                     //   sparkQueue.Dequeue();
                     return true;
+                }
+                else
+                {
+                    Utilities.SparkEmail.Send(configuration.AssetNumber + " HTTP Error " + aResponse.StatusCode.ToString());
                 }
 
                 Debug.WriteLine("Post Status Code: " + aResponse.StatusCode.ToString());
@@ -264,6 +274,17 @@ namespace SparkPi
             currentSystemState = SystemState.DOWN;
 
             systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 500, 500);
+            cycleCountUpdate = new System.Threading.Timer(updateCycleCountEmail, configuration, 60000, 3600000);
+        }
+
+        private void updateCycleCountEmail(object state)
+        {
+            TimeSpan ts = timeOfSystemStartup - DateTime.Now;
+            StringBuilder sb = new StringBuilder();
+            sb.Append("Cycle Count Update:");
+            sb.Append(totalNumberOfCycles.ToString());
+            sb.Append("System Started: " + ts.TotalMinutes.ToString() + " Minutes Ago.");
+            Utilities.SparkEmail.Send(sb.ToString());
         }
 
         private void stateMonitorCheck(object state)
@@ -302,9 +323,7 @@ namespace SparkPi
             heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
-            OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
-            OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
-            OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+            
 
         }
 
@@ -660,12 +679,14 @@ namespace SparkPi
 
             double totalMillisecondsSinceLastCycle = ts.Ticks / 10000.0;
 
-            if (currentSystemState == SystemState.DOWN &&
-            numberOfHeartBeatsSinceLastStateChange >  config.HeartbeatsRequiredToChangeState &&
-            totalMillisecondsSinceLastCycle < (config.CycleLengthMs * 1.5))
-            {
+            //if (currentSystemState == SystemState.DOWN &&
+            //numberOfHeartBeatsSinceLastStateChange >  config.HeartbeatsRequiredToChangeState &&
+            //totalMillisecondsSinceLastCycle < (config.CycleLengthMs * 1.5))
+
+                if (currentSystemState == SystemState.DOWN)
+                {
                 setSystemSateToRun(time,config,sparkQueue);
-            }
+                }
 
         }
 
