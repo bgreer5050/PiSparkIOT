@@ -118,7 +118,6 @@ namespace SparkPi
 
             //}
 
-
             _uiSyncContext = System.Threading.SynchronizationContext.Current;
             DateTime dt = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time"));
             txtblockTime.Text = dt.Hour.ToString() + ":" + dt.Minute.ToString(); // ToString("HH:mm:ss");
@@ -144,6 +143,9 @@ namespace SparkPi
             controller = new Controller();
             configuration = new Configuration();
             network = new Network();
+
+            Utilities.SparkEmail.Send(this.configuration.AssetNumber + " Starting ");
+
 
             viewModel = new VM.ViewModel(controller, configuration, cycleLights, network, sparkQueue, this);
 
@@ -658,8 +660,8 @@ namespace SparkPi
             double totalMillisecondsSinceLastCycle = ts.Ticks / 10000.0;
 
             if (currentSystemState == SystemState.DOWN &&
-            numberOfHeartBeatsSinceLastStateChange >  config.HeartbeatsRequiredToChangeState &&
-            totalMillisecondsSinceLastCycle < (config.CycleLengthMs * 1.5))
+            numberOfHeartBeatsSinceLastStateChange >=  config.HeartbeatsRequiredToChangeState &&
+            totalMillisecondsSinceLastCycle < (config.CycleLengthMs * 2.0))
             {
                 setSystemSateToRun(time,config,sparkQueue);
             }
