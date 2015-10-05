@@ -61,7 +61,7 @@ namespace SparkPi
 
         public Configuration()
         {
-            this.AssetNumber = "804";
+            this.AssetNumber = "768";
             this._gracePeriodMultiple = 1.5f;
             this.CycleLengthMs = 40000;
             this.HeartbeatsRequiredToChangeState = 2;
