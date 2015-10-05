@@ -298,7 +298,7 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(5);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(500);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
