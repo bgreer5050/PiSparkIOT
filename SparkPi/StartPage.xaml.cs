@@ -320,7 +320,7 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(5);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
             
@@ -330,12 +330,14 @@ namespace SparkPi
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             Test = "HEART BEAT RECEIVED";
-            if (sender.Read() == GpioPinValue.High)
+           
+            if (args.Edge == GpioPinEdge.RisingEdge)
             {
                 inputCounter += 1;
                 handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
             }
-            Debug.WriteLine(sender.Read().ToString());
+            Debug.WriteLine(args.Edge.ToString());
+            Debug.WriteLine(args.Edge.ToString()); Debug.WriteLine(args.Edge.ToString()); Debug.WriteLine(args.Edge.ToString());
         }
 
         private void TimerUpdateUI_Tick(object sender, object e)
