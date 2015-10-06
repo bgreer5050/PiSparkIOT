@@ -56,6 +56,8 @@ namespace SparkPi
         private GpioPin heartBeatPin;
         private GpioPin OutPutHeartBeatPinTesting;
 
+        private GpioPin inputPinTesting;
+
         //***********************************************************************************
 
 
@@ -68,6 +70,7 @@ namespace SparkPi
         private DispatcherTimer TimerUpdateUI;
         private static System.Threading.Timer systemStateMonitor;
         private static System.Threading.Timer cycleCountUpdate;
+        private static System.Threading.Timer timerTestController;
 
 
 
@@ -275,6 +278,15 @@ namespace SparkPi
 
             systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 500, 500);
             cycleCountUpdate = new System.Threading.Timer(updateCycleCountEmail, configuration, 60000, 3600000);
+            timerTestController = new System.Threading.Timer(testController, configuration, 5000, 5000);
+        }
+
+        private void testController(object state)
+        {
+            if(inputPinTesting.Read()==GpioPinValue.High)
+            {
+                
+            }
         }
 
         private void updateCycleCountEmail(object state)
@@ -317,13 +329,22 @@ namespace SparkPi
 
 
             var gpioController = GpioController.GetDefault();
-            heartBeatPin = gpioController.OpenPin(5);
+            heartBeatPin = gpioController.OpenPin(12);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
             heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
-            
+            inputPinTesting = gpioController.OpenPin(22);
+            inputPinTesting.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            inputPinTesting.DebounceTimeout = TimeSpan.FromMilliseconds(25);
+            inputPinTesting.ValueChanged += InputPinTesting_ValueChanged;
+           
+        }
+
+        private void InputPinTesting_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
+        {
+            Debug.WriteLine("EDGE TESTING PIN: " + args.Edge.ToString());
 
         }
 
