@@ -278,16 +278,9 @@ namespace SparkPi
 
             systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 500, 500);
             cycleCountUpdate = new System.Threading.Timer(updateCycleCountEmail, configuration, 60000, 3600000);
-            timerTestController = new System.Threading.Timer(testController, configuration, 5000, 5000);
         }
 
-        private void testController(object state)
-        {
-            if(inputPinTesting.Read()==GpioPinValue.High)
-            {
-                
-            }
-        }
+        
 
         private void updateCycleCountEmail(object state)
         {
@@ -337,7 +330,7 @@ namespace SparkPi
 
             inputPinTesting = gpioController.OpenPin(22);
             inputPinTesting.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            inputPinTesting.DebounceTimeout = TimeSpan.FromMilliseconds(25);
+            inputPinTesting.DebounceTimeout = TimeSpan.FromMilliseconds(10);
             inputPinTesting.ValueChanged += InputPinTesting_ValueChanged;
            
         }
