@@ -52,11 +52,8 @@ namespace SparkPi
         //private const int LED_PIN = 6;
         //private const int HEARTBEAT_PIN = 5;
 
-//        private GpioPin ledPin;
         private GpioPin heartBeatPin;
-        private GpioPin OutPutHeartBeatPinTesting;
 
-        private GpioPin inputPinTesting;
 
         //***********************************************************************************
 
@@ -278,9 +275,13 @@ namespace SparkPi
 
             systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 500, 500);
             cycleCountUpdate = new System.Threading.Timer(updateCycleCountEmail, configuration, 60000, 3600000);
+            timerTestController = new System.Threading.Timer(TestController, configuration, 5000, 5000);
         }
 
-        
+        private void TestController(object state)
+        {
+           
+        }
 
         private void updateCycleCountEmail(object state)
         {
@@ -325,14 +326,9 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(12);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
-            inputPinTesting = gpioController.OpenPin(22);
-            inputPinTesting.SetDriveMode(GpioPinDriveMode.InputPullDown);
-            inputPinTesting.DebounceTimeout = TimeSpan.FromMilliseconds(10);
-            inputPinTesting.ValueChanged += InputPinTesting_ValueChanged;
-           
         }
 
         private void InputPinTesting_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
@@ -343,15 +339,17 @@ namespace SparkPi
 
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
-            Test = "HEART BEAT RECEIVED";
+            //Test = "HEART BEAT RECEIVED";
            
-            if (args.Edge == GpioPinEdge.RisingEdge)
-            {
-                inputCounter += 1;
-                handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
-            }
+            //if (args.Edge == GpioPinEdge.RisingEdge)
+            //{
+            //    inputCounter += 1;
+            //    handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
+            //}
             Debug.WriteLine(args.Edge.ToString());
             Debug.WriteLine(args.Edge.ToString()); Debug.WriteLine(args.Edge.ToString()); Debug.WriteLine(args.Edge.ToString());
+          
+
         }
 
         private void TimerUpdateUI_Tick(object sender, object e)
@@ -387,7 +385,7 @@ namespace SparkPi
 
             txtCycleCount.Text = viewModel.TotalNumberOfCycles.ToString();
             Debug.WriteLine("TOTAL CYCLE COUNT: " + StartPage.totalNumberOfCycles.ToString());
-            Debug.WriteLine("TOTAL CYCLE COUNT: " + viewModel.TotalNumberOfCycles.ToString());
+            //Debug.WriteLine("TOTAL CYCLE COUNT: " + viewModel.TotalNumberOfCycles.ToString());
             //*****************************************************************************************
             //************************    Update Cycle Lights **************************
 
