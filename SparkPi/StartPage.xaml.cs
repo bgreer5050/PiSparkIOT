@@ -200,6 +200,8 @@ namespace SparkPi
 
                     Debug.WriteLine(ex.Message);
                     viewModel.Errors.Add("L197" + ex.Message);
+                    Utilities.SparkEmail.Send(configuration.AssetNumber + " Posting Error: " + postData);
+
                     return false;
                 }
 
@@ -298,7 +300,7 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(5);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
@@ -310,12 +312,18 @@ namespace SparkPi
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             Test = "HEART BEAT RECEIVED";
-            if (sender.Read() == GpioPinValue.High)
-            {
+            if(args.Edge == GpioPinEdge.RisingEdge)
+            { 
+           
                 inputCounter += 1;
                 handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
             }
-            Debug.WriteLine(sender.Read().ToString());
+            Debug.WriteLine(args.Edge.ToString());
+            Debug.WriteLine(args.Edge.ToString());
+            Debug.WriteLine(args.Edge.ToString());
+            Debug.WriteLine(args.Edge.ToString());
+            Debug.WriteLine(args.Edge.ToString());
+
         }
 
         private void TimerUpdateUI_Tick(object sender, object e)
