@@ -326,7 +326,7 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(12);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(10);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(5);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
         }
@@ -340,14 +340,15 @@ namespace SparkPi
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             //Test = "HEART BEAT RECEIVED";
-           
-            //if (args.Edge == GpioPinEdge.RisingEdge)
-            //{
-            //    inputCounter += 1;
-            //    handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
-            //}
+            TimeSpan ts = timeOfLastHeartbeat - DateTime.Now;
+            Debug.WriteLine(ts.TotalMilliseconds.ToString());
+
+            if (args.Edge == GpioPinEdge.RisingEdge)
+            {
+                inputCounter += 1;
+                handleHeartBeat(DateTime.Now, controller, configuration, sparkQueue);
+            }
             Debug.WriteLine(args.Edge.ToString());
-            Debug.WriteLine(args.Edge.ToString()); Debug.WriteLine(args.Edge.ToString()); Debug.WriteLine(args.Edge.ToString());
           
 
         }
