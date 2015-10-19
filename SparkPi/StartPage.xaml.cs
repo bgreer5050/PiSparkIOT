@@ -111,7 +111,11 @@ namespace SparkPi
         {
            
             InitializeComponent();
-            SetUpMisc();
+
+            string powerOuttagePost =  PowerOuttageHandler.CheckLog().Result;
+            
+
+            SetUpMisc(powerOuttagePost);
             //while(true)
             //{
 
@@ -130,14 +134,13 @@ namespace SparkPi
             timerDateTime.Tick += TimerDateTime_Tick1;
             timerDateTime.Start();
 
-           
-
             setUpSystem();
             setUpBoardIO();
-            //powerHandler = new PowerOuttageHandler();
+          
 
             controller = new Controller();
             configuration = new Configuration();
+            powerHandler = new PowerOuttageHandler(configuration);
             network = new Network();
 
             Utilities.SparkEmail.Send(this.configuration.AssetNumber + " Starting ");
@@ -149,10 +152,15 @@ namespace SparkPi
             sparkQueue.DataReadyForPickUp += SparkQueue_DataReadyForPickUp;
         }
 
-        private async void SetUpMisc()
+        private async void SetUpMisc(string strPowerOuttagePost)
         {
             sparkQueue = new SparkQueue();
             sparkQueue.itializeClass().Wait();
+            if(strPowerOuttagePost.Length > 5)
+            {
+                sparkQueue.Enqueue(strPowerOuttagePost);
+            }
+            
         }
 
 
