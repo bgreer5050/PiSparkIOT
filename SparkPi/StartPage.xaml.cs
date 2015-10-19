@@ -64,7 +64,6 @@ namespace SparkPi
         /// </summary>
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
-        private DispatcherTimer TimerUpdateUI;
         private static System.Threading.Timer systemStateMonitor;
         //************************************************************************************
 
@@ -131,10 +130,7 @@ namespace SparkPi
             timerDateTime.Tick += TimerDateTime_Tick1;
             timerDateTime.Start();
 
-            TimerUpdateUI = new DispatcherTimer();
-            TimerUpdateUI.Interval = TimeSpan.FromMilliseconds(300);
-            TimerUpdateUI.Tick += TimerUpdateUI_Tick;
-            TimerUpdateUI.Start();
+           
 
             setUpSystem();
             setUpBoardIO();
