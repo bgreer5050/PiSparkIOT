@@ -11,10 +11,50 @@ namespace SparkPi
 {
     public class PowerOuttageHandler
     {
-        public StorageFolder folder { get; set; }
 
-        public StorageFile file { get; set; }
+        private StorageFolder storageFolder;
+        private StorageFile storageFile;
 
+        public StorageFolder folder {
+
+            get {
+                if(this.storageFolder != null)
+                {
+                   
+                }
+                else
+                {
+                    this.storageFolder = Windows.Storage.ApplicationData.Current.LocalFolder;
+                }
+                return this.storageFolder;
+               
+            }
+            set {
+                this.storageFolder = value;
+
+            }
+
+        }
+
+        public StorageFile file
+        {
+            get
+            {
+                if(this.storageFile!=null)
+                {
+                  
+                }
+                else
+                {
+                    this.storageFile = folder.CreateFileAsync("PowerOuttageHandler.txt",CreationCollisionOption.ReplaceExisting).AsTask().Result;
+                }
+                return this.storageFile;
+            }
+            set
+            {
+                this.file = value;
+            }
+        }
 
 
         public System.Threading.Timer timer;
@@ -22,15 +62,11 @@ namespace SparkPi
         public PowerOuttageHandler(Configuration configuration)
         {
             timer = new System.Threading.Timer(RecordMachineStatus, configuration, 10000, 7000);
-            InitializeClass();
+            //InitializeClass();
            
         }
 
-        private void InitializeClass()
-        {
-            this.folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-            this.file = GetFile(folder).Result;
-        }
+       
 
         private async void RecordMachineStatus(object state)
         {
