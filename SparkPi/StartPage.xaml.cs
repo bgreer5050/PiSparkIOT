@@ -320,8 +320,20 @@ namespace SparkPi
 
 
             var gpioController = GpioController.GetDefault();
+
+            if(gpioController == null)
+            {
+                Debug.WriteLine("There is no GPIO Controller");
+                Utilities.SparkEmail.Send(configuration.AssetNumber + " No GPIO Controller Found");
+            }
+
             heartBeatPin = gpioController.OpenPin(12);
-            heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            if (heartBeatPin.IsDriveModeSupported(GpioPinDriveMode.InputPullDown))
+            {
+                heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+                Debug.WriteLine("Pull Down Supported");
+            }
+
 
             heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(5);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
