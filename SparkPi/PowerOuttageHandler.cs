@@ -101,19 +101,27 @@ namespace SparkPi
         {
             
            StorageFolder folder = Windows.Storage.ApplicationData.Current.LocalFolder;
-           StorageFile file = await folder.GetFileAsync("PowerOuttageHandler.txt");
+           string text;
 
-            Stream stream = await file.OpenStreamForReadAsync();
-            string text;
-
-            using (StreamReader reader = new StreamReader(stream))
+            var _file  = await folder.TryGetItemAsync("PowerOuttageHandler.txt");
+            if (_file != null) // Check if the file exists.  If this is the first time the controller is booting, the file will not exist.
             {
-                text = reader.ReadToEnd();
-            }
+                StorageFile file = (StorageFile)_file;
+                Stream stream = await file.OpenStreamForReadAsync();
 
-            if(text.ToLower().Contains("running")==true)
-            {
-                text = text.Replace("RUNNING", "DOWN");
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    text = reader.ReadToEnd();
+                }
+
+                if (text.ToLower().Contains("running") == true)
+                {
+                    text = text.Replace("RUNNING", "DOWN");
+                }
+                else
+                {
+                    text = "";
+                }
             }
             else
             {
