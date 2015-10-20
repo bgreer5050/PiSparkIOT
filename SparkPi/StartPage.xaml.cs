@@ -65,6 +65,7 @@ namespace SparkPi
         private DispatcherTimer timer;
         private DispatcherTimer timerDateTime;
         private static System.Threading.Timer systemStateMonitor;
+        private static System.Threading.Timer emailCycleCount;
         //************************************************************************************
 
         /// <summary>
@@ -267,6 +268,14 @@ namespace SparkPi
             currentSystemState = SystemState.DOWN;
 
             systemStateMonitor = new System.Threading.Timer(stateMonitorCheck, configuration, 1000, 1000);
+            emailCycleCount = new System.Threading.Timer(_emailCycleCount, null, 60000, 1500000);
+
+
+    }
+
+        private void _emailCycleCount(object state)
+        {
+            Utilities.SparkEmail.Send("804 Cycle Count - " + totalNumberOfCycles);
         }
 
         private void stateMonitorCheck(object state)
@@ -302,7 +311,7 @@ namespace SparkPi
             heartBeatPin = gpioController.OpenPin(12);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
             OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
@@ -318,6 +327,7 @@ namespace SparkPi
             {
                 inputCounter += 1;
                 handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
+                heartBeatPin.Write(GpioPinValue.Low);
             }
             Debug.WriteLine("***********************************");
             Debug.WriteLine(args.Edge.ToString());
