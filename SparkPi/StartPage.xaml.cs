@@ -62,8 +62,7 @@ namespace SparkPi
         /// <summary>
         /// Timers **********************************************************************
         /// </summary>
-        private DispatcherTimer timer;
-        private DispatcherTimer timerDateTime;
+       
         private static System.Threading.Timer systemStateMonitor;
         private static System.Threading.Timer emailCycleCount;
         //************************************************************************************
@@ -240,24 +239,7 @@ namespace SparkPi
 
         //}
 
-        private void TimerDateTime_Tick1(object sender, object e)
-        {
-            //BELOW IS WHEN WE ARE IN BENCH TESTING MODE ONLY.  IT SIMULATES HEARTBEATS.
-            //if (OutPutHeartBeatPinTesting.Read() == GpioPinValue.High)
-            //{
-            //    OutPutHeartBeatPinTesting.Write(GpioPinValue.Low);
-            //}
-            //else if(DateTime.Now.Second > 30)
-            //{
-            //    OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
-            //    outPutCounter += 1;
-            //}
-
-            txtblockTime.Text = "Time Of Day: " + DateTime.Now.TimeOfDay.ToString();
-          
-            Debug.WriteLine(inputCounter.ToString());
-            Debug.WriteLine(outPutCounter.ToString());
-        }
+        
 
         private void setUpSystem()
         {
@@ -608,23 +590,7 @@ namespace SparkPi
 
         //}
 
-        //private void Timer_Tick(object sender, object e)
-        //{
-        //    if (pinValue == GpioPinValue.High)
-        //    {
-        //        pinValue = GpioPinValue.Low;
-        //        pin.Write(pinValue);
-        //        redLED.Fill = redBrush;
-        //        greenLED.Fill = grayBrush;
-        //    }
-        //    else
-        //    {
-        //        pinValue = GpioPinValue.High;
-        //        pin.Write(pinValue);
-        //        redLED.Fill = grayBrush;
-        //        greenLED.Fill = greenBrush;
-        //    }
-        //}
+       
 
 
         async Task<int> AccessTheWebAsync()
