@@ -49,11 +49,13 @@ namespace SparkPi
         /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
         /// </summary>
         //private const int LED_PIN = 6;
-        //private const int HEARTBEAT_PIN = 5;
-
+        private const int HEARTBEAT_PIN = 12;
+        private const int OUTPUT_PIN = 6;
 //        private GpioPin ledPin;
         private GpioPin heartBeatPin;
         private GpioPin OutPutHeartBeatPinTesting;
+
+
 
         //***********************************************************************************
 
@@ -128,11 +130,6 @@ namespace SparkPi
             //timer.Interval = TimeSpan.FromMilliseconds(500);
             //timer.Tick += Timer_Tick;
 
-            timerDateTime = new DispatcherTimer();
-            timerDateTime.Interval = TimeSpan.FromMilliseconds(300);
-            //timerDateTime.Tick += TimerDateTime_Tick;
-            timerDateTime.Tick += TimerDateTime_Tick1;
-            timerDateTime.Start();
 
             setUpSystem();
             setUpBoardIO();
@@ -288,17 +285,36 @@ namespace SparkPi
             //The OutPutHeartBeatPin will be set to high.  When the isolation relay
             //on the machine closes our OutPutHearBeatPin will send 5v to the hearBeatPin
 
-
             var gpioController = GpioController.GetDefault();
-            heartBeatPin = gpioController.OpenPin(12);
-            heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            Task.Run(() => {
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
-            heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
+                int count = 0;
 
-            OutPutHeartBeatPinTesting = gpioController.OpenPin(6);
-            OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
-            OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+                heartBeatPin = gpioController.OpenPin(HEARTBEAT_PIN);
+                heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+
+                heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+                //heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
+
+                OutPutHeartBeatPinTesting = gpioController.OpenPin(OUTPUT_PIN);
+                OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
+                OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
+                while(true)
+                {
+                   if(heartBeatPin.Read() == GpioPinValue.High)
+                    {
+                        count += 1;
+                        Debug.WriteLine("********************************");
+                        Debug.WriteLine(" HIGH ");
+                        Debug.WriteLine(" CYCLE COUNT: " + count);
+                        Debug.WriteLine("********************************");
+
+                    }
+                }
+            });
+
+            
+            
 
         }
 

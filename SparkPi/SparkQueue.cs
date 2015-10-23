@@ -17,8 +17,7 @@ namespace SparkPi
         public delegate void SparkQueueEventHandler(object sender, EventArgs e);
         public event SparkQueueEventHandler DataReadyForPickUp;
         public int QueueCycleMilliSeconds { get; set; }
-        public string SubDirectoryPath { get; set; }
-        public string DataFileName { get; set; }
+      
       
         private Queue inboundQueue;
         private Queue outboundQueue;
@@ -120,7 +119,9 @@ namespace SparkPi
                 Debug.WriteLine("Check For Outbound");
                 Debug.WriteLine("Outbound Queue: " + outboundQueue.Count.ToString());
 
-                if (outboundQueue.Count == 0)
+            Debug.WriteLine("TOTAL CYCLE COUNT: " + StartPage.totalNumberOfCycles.ToString());
+
+            if (outboundQueue.Count == 0)
                 {
                     //Debug.Print("There is nothing in Outbound Queue.  Check if there is anything on the SD Card");
                     
