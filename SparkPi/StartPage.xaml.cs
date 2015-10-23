@@ -291,7 +291,16 @@ namespace SparkPi
                 int count = 0;
 
                 heartBeatPin = gpioController.OpenPin(HEARTBEAT_PIN);
-                heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+
+                if(heartBeatPin.IsDriveModeSupported(GpioPinDriveMode.InputPullDown))
+                {
+                    heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+
+                }
+                else
+                {
+                    heartBeatPin.SetDriveMode(GpioPinDriveMode.Input);
+                }
 
                 heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
                 //heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
@@ -299,7 +308,10 @@ namespace SparkPi
                 OutPutHeartBeatPinTesting = gpioController.OpenPin(OUTPUT_PIN);
                 OutPutHeartBeatPinTesting.SetDriveMode(GpioPinDriveMode.Output);
                 OutPutHeartBeatPinTesting.Write(GpioPinValue.High);
-                while(true)
+
+                heartBeatPin.Write(GpioPinValue.Low);
+
+                while (true)
                 {
                    if(heartBeatPin.Read() == GpioPinValue.High)
                     {
@@ -308,7 +320,7 @@ namespace SparkPi
                         Debug.WriteLine(" HIGH ");
                         Debug.WriteLine(" CYCLE COUNT: " + count);
                         Debug.WriteLine("********************************");
-
+                        heartBeatPin.Write(GpioPinValue.Low);
                     }
                 }
             });
