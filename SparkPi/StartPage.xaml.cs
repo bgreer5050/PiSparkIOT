@@ -49,7 +49,6 @@ namespace SparkPi
         /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
         /// </summary>
         private const int HEARTBEAT_PIN = 5;
-
         private GpioPin heartBeatPin;
 
         //***********************************************************************************
@@ -298,10 +297,15 @@ namespace SparkPi
             }
 
 
-            heartBeatPin = gpioController.OpenPin(HEARTBEAT_PIN);
-            heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
+            // Check if input pull-up resistors are supported
+            if (heartBeatPin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
+                heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullUp);
+            else
+                heartBeatPin.SetDriveMode(GpioPinDriveMode.Input);
 
-            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
+            // Set a debounce timeout to filter out switch bounce noise from a button press
+            heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(50);
+
             heartBeatPin.ValueChanged += HeartBeatPin_ValueChanged;
 
            
@@ -311,15 +315,12 @@ namespace SparkPi
         private void HeartBeatPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
         {
             Test = "HEART BEAT RECEIVED";
-            if(args.Edge == GpioPinEdge.RisingEdge)
+            if(args.Edge == GpioPinEdge.FallingEdge)
             {
                 inputCounter += 1;
                 handleHeartBeat(DateTime.Now, controller, configuration,sparkQueue);
             }
             Debug.WriteLine("***********************************");
-            Debug.WriteLine(args.Edge.ToString());
-            Debug.WriteLine(args.Edge.ToString());
-            Debug.WriteLine(args.Edge.ToString());
             Debug.WriteLine(args.Edge.ToString());
             Debug.WriteLine("***********************************");
 
@@ -327,21 +328,7 @@ namespace SparkPi
 
         private void TimerUpdateUI_Tick(object sender, object e)
         {
-            // txtblockTime.Text = Test;
-
             UpdateUI();
-
-            //if (blnDateReceivedFromServer)
-            //{
-            //    PiTimeRed.Fill = grayBrush;
-            //    PiTimeGreen.Fill = greenBrush;
-            //}
-            //else
-            //{
-            //    PiTimeGreen.Fill = grayBrush;
-            //    PiTimeRed.Fill = redBrush;
-            //}
-
         }
 
         private void UpdateUI()
@@ -573,27 +560,7 @@ namespace SparkPi
         }
 
 
-        //private void InitGPIO()
-        //{
-        //    var gpio = GpioController.GetDefault();
-
-        //    // Show an error if there is no GPIO controller
-        //    if (gpio == null)
-        //    {
-        //        pin = null;
-        //        GpioStatus.Text = "There is no GPIO controller on this device.";
-        //        return;
-        //    }
-
-        //    pin = gpio.OpenPin(LED_PIN);
-        //    pinValue = GpioPinValue.High;
-        //    pin.Write(pinValue);
-        //    pin.SetDriveMode(GpioPinDriveMode.Output);
-
-
-        //    GpioStatus.Text = "GPIO pin initialized correctly.";
-
-        //}
+     
 
        
 
