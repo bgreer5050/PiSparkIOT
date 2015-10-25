@@ -48,12 +48,9 @@ namespace SparkPi
         /// <summary>
         /// INPUT AND OUTPUT PIN DECLARATIONS **********************************************
         /// </summary>
-        //private const int LED_PIN = 6;
-        //private const int HEARTBEAT_PIN = 5;
+        private const int HEARTBEAT_PIN = 5;
 
-//        private GpioPin ledPin;
         private GpioPin heartBeatPin;
-        private GpioPin OutPutHeartBeatPinTesting;
 
         //***********************************************************************************
 
@@ -75,19 +72,15 @@ namespace SparkPi
         private SolidColorBrush yellowBrush = new SolidColorBrush(Windows.UI.Colors.Yellow);
         private SolidColorBrush greenBrush = new SolidColorBrush(Windows.UI.Colors.Green);
         private SolidColorBrush grayBrush = new SolidColorBrush(Windows.UI.Colors.LightGray);
-        
 
         //**************************************************************************************
-
 
         /// <summary>
         /// SHARED VARIABLES FOR UI UPDATE **********************************************************************
         /// </summary>
         public CycleLights cycleLights;
 
-
         //**************************************************************************************
-
 
         /// <summary>
         /// Flag Variables *********************************************************************
@@ -105,7 +98,6 @@ namespace SparkPi
 
             // TODO How to use this ?
         System.Threading.SynchronizationContext _uiSyncContext;
-        
 
         public StartPage()
         {
@@ -113,7 +105,6 @@ namespace SparkPi
             InitializeComponent();
 
             string powerOuttagePost =  PowerOuttageHandler.CheckLog().Result;
-            
 
             SetUpMisc(powerOuttagePost);
             //while(true)
@@ -299,7 +290,15 @@ namespace SparkPi
 
 
             var gpioController = GpioController.GetDefault();
-            heartBeatPin = gpioController.OpenPin(5);
+
+            if(gpioController == null)
+            {
+                Utilities.SparkEmail.Send(configuration.AssetNumber + " NO GPIO CONTROLLER.");
+                return;
+            }
+
+
+            heartBeatPin = gpioController.OpenPin(HEARTBEAT_PIN);
             heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullDown);
 
             heartBeatPin.DebounceTimeout = TimeSpan.FromMilliseconds(25);
@@ -598,23 +597,7 @@ namespace SparkPi
 
         //}
 
-        //private void Timer_Tick(object sender, object e)
-        //{
-        //    if (pinValue == GpioPinValue.High)
-        //    {
-        //        pinValue = GpioPinValue.Low;
-        //        pin.Write(pinValue);
-        //        redLED.Fill = redBrush;
-        //        greenLED.Fill = grayBrush;
-        //    }
-        //    else
-        //    {
-        //        pinValue = GpioPinValue.High;
-        //        pin.Write(pinValue);
-        //        redLED.Fill = grayBrush;
-        //        greenLED.Fill = greenBrush;
-        //    }
-        //}
+       
 
 
         async Task<int> AccessTheWebAsync()
