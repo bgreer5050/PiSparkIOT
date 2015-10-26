@@ -297,6 +297,8 @@ namespace SparkPi
             }
 
 
+            heartBeatPin = gpioController.OpenPin(HEARTBEAT_PIN);
+
             // Check if input pull-up resistors are supported
             if (heartBeatPin.IsDriveModeSupported(GpioPinDriveMode.InputPullUp))
                 heartBeatPin.SetDriveMode(GpioPinDriveMode.InputPullUp);
