@@ -9,6 +9,7 @@ using Windows.ApplicationModel.Background;
 using Windows.Devices.Gpio;
 using Windows.System.Threading;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace BlinkyHeadlessCS
 {
@@ -17,7 +18,9 @@ namespace BlinkyHeadlessCS
         BackgroundTaskDeferral deferral;
         private string SCRAP_REPORTING_ENDPOINT = "http://dev.sparkhub.metal-matic.com/api/Scrap/Record";
         private string ASSET_ID = "483";
-     
+
+        private GpioPin outputConfirm;
+             
         public void Run(IBackgroundTaskInstance taskInstance)
         {
 
@@ -47,6 +50,10 @@ namespace BlinkyHeadlessCS
         };
 
 
+        
+
+
+
         private void InitGpio()
         {
             var gpio = GpioController.GetDefault();
@@ -60,7 +67,14 @@ namespace BlinkyHeadlessCS
 
             buttonPinConfig.ForEach(bc => InitializeButtonPin(gpio, bc));
 
-            DebugMsg("GPIO pins initialized.");
+
+            outputConfirm = gpio.OpenPin(25);
+            if(outputConfirm.IsDriveModeSupported(GpioPinDriveMode.Output)==true)
+                {
+                outputConfirm.SetDriveMode(GpioPinDriveMode.Output);
+                }
+
+                DebugMsg("GPIO pins initialized.");
         }
 
         private void gpioPin_ValueChanged(GpioPin sender, GpioPinValueChangedEventArgs args)
@@ -73,9 +87,28 @@ namespace BlinkyHeadlessCS
                 if (buttonConfig != null)
                 {
                     var buttonNumber = buttonConfig.ButtonNumber;
+                    ConfirmInput();
+
                     ButtonPressUp(buttonNumber);
+
                 }
             }
+        }
+
+        private async void ConfirmInput()
+        {
+            // TODO Add A Timer that lights the led for 300 milliseconds.
+
+            await ConfirmSuccessfulInput();
+
+        }
+
+        private async Task ConfirmSuccessfulInput()
+        {
+            outputConfirm.Write(GpioPinValue.High);
+            await Task.Delay(TimeSpan.FromMilliseconds(200));
+            outputConfirm.Write(GpioPinValue.Low);
+
         }
 
         private void ButtonPressUp(int buttonNumber)
@@ -154,4 +187,6 @@ namespace BlinkyHeadlessCS
         public int ButtonNumber { get; set; }
         public GpioPin GpioPin { get; set; }
     }
+
+  
 }
