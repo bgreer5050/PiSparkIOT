@@ -23,34 +23,31 @@ namespace BlinkyHeadlessCS
              
         public void Run(IBackgroundTaskInstance taskInstance)
         {
-
             deferral = taskInstance.GetDeferral();
             InitGpio();
-
         }
 
         /// <summary>
         /// Maps out the GPIO Pin Numbers to a panel button number.
         /// </summary>
         private readonly List<ButtonWiringConfig> buttonPinConfig = new List<ButtonWiringConfig> {
-            new ButtonWiringConfig { GpioPinNumber = 4, ButtonNumber = 1 },
-            new ButtonWiringConfig { GpioPinNumber = 5, ButtonNumber = 2 },
-            new ButtonWiringConfig { GpioPinNumber = 6, ButtonNumber = 3 },
-            new ButtonWiringConfig { GpioPinNumber = 12, ButtonNumber = 4 },
-            new ButtonWiringConfig { GpioPinNumber = 13, ButtonNumber = 5 },
-            new ButtonWiringConfig { GpioPinNumber = 16, ButtonNumber = 6 },
+            new ButtonWiringConfig { GpioPinNumber = 4, ButtonNumber = 1,TerminalNumber = 7 },
+            new ButtonWiringConfig { GpioPinNumber = 5, ButtonNumber = 2, TerminalNumber = 29 },
+            new ButtonWiringConfig { GpioPinNumber = 6, ButtonNumber = 3, TerminalNumber = 31 },
+            new ButtonWiringConfig { GpioPinNumber = 12, ButtonNumber = 4, TerminalNumber = 32 },
+            new ButtonWiringConfig { GpioPinNumber = 13, ButtonNumber = 5, TerminalNumber = 33 },
+            new ButtonWiringConfig { GpioPinNumber = 16, ButtonNumber = 6, TerminalNumber = 36 },
             //new ButtonWiringConfig { GpioPinNumber = 17, ButtonNumber = 4 },
-            new ButtonWiringConfig { GpioPinNumber = 18, ButtonNumber = 7 },
+            new ButtonWiringConfig { GpioPinNumber = 18, ButtonNumber = 7, TerminalNumber = 12 },
             //new ButtonWiringConfig { GpioPinNumber = 20, ButtonNumber = 4 },
             //new ButtonWiringConfig { GpioPinNumber = 21, ButtonNumber = 8 }
-            new ButtonWiringConfig { GpioPinNumber = 23, ButtonNumber = 8 },
-            new ButtonWiringConfig { GpioPinNumber = 24, ButtonNumber = 9 }
+            new ButtonWiringConfig { GpioPinNumber = 23, ButtonNumber = 8, TerminalNumber = 16 },
+            new ButtonWiringConfig { GpioPinNumber = 24, ButtonNumber = 9, TerminalNumber = 18 },
+            new ButtonWiringConfig {GpioPinNumber = 27, ButtonNumber = 10, TerminalNumber = 13 }
             //new ButtonWiringConfig { GpioPinNumber = 25, ButtonNumber = 25 }
 
         };
 
-
-        
 
 
 
@@ -185,6 +182,9 @@ namespace BlinkyHeadlessCS
     {
         public int GpioPinNumber { get; set; }
         public int ButtonNumber { get; set; }
+
+        public int TerminalNumber { get; set; }
+
         public GpioPin GpioPin { get; set; }
     }
 
